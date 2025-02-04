@@ -89,6 +89,7 @@ public class JDBC {
         }
     }
 
+	
 	public static ReturnMessage validEmail(String email) {
 		
 		String url = "jdbc:mysql://localhost:3306/quizApp";
@@ -117,7 +118,7 @@ public class JDBC {
     }
 
 
-public static ReturnMessage addAdmin(String email,String password,String name) {
+	public static ReturnMessage addAdmin(String email,String password,String name) {
 	
 	String url = "jdbc:mysql://localhost:3306/quizApp";
     String user = "root";
@@ -146,7 +147,46 @@ public static ReturnMessage addAdmin(String email,String password,String name) {
     }
 }
 
+
+	public static ReturnMessage addQuestion(String question,String level,String answer, String opt1,String opt2,String opt3,String opt4) {
+        String url = "jdbc:mysql://localhost:3306/quizApp";
+        String user = "root";
+        String pass = "admin@12345";
+        
+        String query = "INSERT INTO questions (question, level, answer, option1, option2, option3, option4) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+         try (Connection connection = DriverManager.getConnection(url, user, pass);
+                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        	 
+           
+                preparedStatement.setString(1, question);
+                preparedStatement.setString(2, level);
+                preparedStatement.setString(3, answer);
+                preparedStatement.setString(4, opt1);
+                preparedStatement.setString(5, opt2);
+                preparedStatement.setString(6, opt3);
+                preparedStatement.setString(7, opt4);
+                
+        
+                int affectedRows = preparedStatement.executeUpdate();
+                if(affectedRows>0) {
+                	return new ReturnMessage(true, "Question Addition Successed", null);
+                	
+                }else {
+                	return new ReturnMessage(false, "Question Addition Failed", null);
+                }
+                
+            } catch (SQLException exception) {
+                System.out.println(exception);
+                return new ReturnMessage(false,"Server side exception occured",null);
+                
+            }
+        	
+        }
+
 }
+
+
 
 	
 

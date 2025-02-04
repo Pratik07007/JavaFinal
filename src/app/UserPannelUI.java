@@ -8,7 +8,7 @@ public class UserPannelUI {
     private JPanel mainPanel;
     private CardLayout cardLayout;
 
-    public UserPannelUI() {
+    public UserPannelUI(String name) {
         frame = new JFrame("My Quiz App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Fullscreen
@@ -17,7 +17,7 @@ public class UserPannelUI {
         mainPanel = new JPanel(cardLayout);
 
         // Home Page
-        JPanel homePanel = createHomePage();
+        JPanel homePanel = createHomePage(name);
         mainPanel.add(homePanel, "Home");
         
         // Quiz Page
@@ -36,7 +36,7 @@ public class UserPannelUI {
         frame.setVisible(true);
     }
 
-    private JPanel createHomePage() {
+    private JPanel createHomePage(String name) {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(new Color(50, 150, 250)); // Background color
 
@@ -46,7 +46,7 @@ public class UserPannelUI {
         gbc.insets = new Insets(20, 0, 20, 0);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel titleLabel = new JLabel("My Quiz App", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Welcome "+name+" !", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 48));
         titleLabel.setForeground(Color.WHITE);
 
@@ -112,7 +112,5 @@ public class UserPannelUI {
         return button;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(UserPannelUI::new);
-    }
+   
 }

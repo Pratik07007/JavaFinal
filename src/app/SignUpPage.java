@@ -82,7 +82,7 @@ public class SignUpPage extends JFrame {
                 
                 ReturnMessage response = JDBC.registerUser(name, email, hashedPassword);
                 if(response.success) {
-                	JOptionPane.showMessageDialog(SignUpPage.this, response.msg, "Success", JOptionPane.ERROR_MESSAGE);
+                	JOptionPane.showMessageDialog(SignUpPage.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
                 	dispose();
                 	new SignInPage();
                 }else {

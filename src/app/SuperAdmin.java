@@ -61,7 +61,7 @@ public class SuperAdmin extends JFrame {
                 }
                 ReturnMessage response =  JDBC.addAdmin(email,password,name);
                 if(response.success) {
-                	JOptionPane.showMessageDialog(SuperAdmin.this, response.msg, "Success", JOptionPane.ERROR_MESSAGE);
+                	JOptionPane.showMessageDialog(SuperAdmin.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
                 	dispose();
                 	new SignInPage();
                 }else {
