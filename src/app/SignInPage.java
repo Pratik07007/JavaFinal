@@ -81,7 +81,7 @@ public class SignInPage extends JFrame {
                 		new UserPannelUI(response.user); 
                 	}else {
                 		dispose();
-                		new AdminPanel(response.user); 
+                		new AddQuestionPage(response.user); 
                 		
                 	}
                 }else {

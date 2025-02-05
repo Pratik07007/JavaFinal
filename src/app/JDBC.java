@@ -193,32 +193,40 @@ public class JDBC {
         }
 	
 	
+	public static ArrayList<Questions> fetchAllQuestions() {
+	    ArrayList<Questions> questions = new ArrayList<>();
+	    String url = "jdbc:mysql://localhost:3306/quizApp";
+	    String user = "root";
+	    String password = "admin@12345";
 
-	
-	public static List<Questions> fetchAndShuffleQuestions() {
-	    List<Questions> questions = new ArrayList<>();
-	    String url = "jdbc:mysql://localhost:3306/quizApp";  
-	    String user = "root";  
-	    String password = "admin@12345";  
-
-	    String query = "SELECT id, question FROM questions";  
+	    String query = "SELECT * FROM questions ORDER BY id DESC";
 
 	    try (Connection conn = DriverManager.getConnection(url, user, password);
 	         Statement stmt = conn.createStatement();
 	         ResultSet rs = stmt.executeQuery(query)) {
 
 	        while (rs.next()) {
-	            int id = rs.getInt("id");  
-	            String text = rs.getString("question");  
-	            questions.add(new Questions(id, text));  
+	            int id = rs.getInt("id");
+	            String text = rs.getString("question");
+	            String opt1 = rs.getString("option1");
+	            String opt2 = rs.getString("option2");
+	            String opt3 = rs.getString("option3");
+	            String opt4 = rs.getString("option4");
+	            String level = rs.getString("level");
+	            String answer = rs.getString("answer");
+
+	            // Adding a complete Questions object
+	            questions.add(new Questions(id, text, opt1, opt2, opt3, opt4, level, answer));
 	        }
+	        return questions;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
+	    return null;
 
-	    Collections.shuffle(questions);
-	    return questions;
 	}
+
+
 	
 	public static boolean deleteQuestion(int questionId) {
 	    String url = "jdbc:mysql://localhost:3306/quizApp";  
@@ -240,6 +248,33 @@ public class JDBC {
 	    }
 	}
 
+	public static boolean updateQuestion(int questionId, String questionText, String level, String option1, String option2, String option3, String option4, String answer) {
+	    String url = "jdbc:mysql://localhost:3306/quizApp";  
+	    String user = "root";  
+	    String password = "admin@12345";  
+
+	    String query = "UPDATE questions SET question = ?, level = ?, option1 = ?, option2 = ?, option3 = ?, option4 = ?, answer = ? WHERE id = ?";  
+
+	    try (Connection conn = DriverManager.getConnection(url, user, password);
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setString(1, questionText);
+	        stmt.setString(2, level.toUpperCase());  // Ensure level is capitalized
+	        stmt.setString(3, option1.isEmpty() ? null : option1);  // If empty, set to null
+	        stmt.setString(4, option2.isEmpty() ? null : option2);  // If empty, set to null
+	        stmt.setString(5, option3.isEmpty() ? null : option3);  // If empty, set to null
+	        stmt.setString(6, option4.isEmpty() ? null : option4);  // If empty, set to null
+	        stmt.setString(7, answer.isEmpty() ? null : answer);    // If empty, set to null
+	        stmt.setInt(8, questionId);
+
+	        int rowsAffected = stmt.executeUpdate();  
+
+	        return rowsAffected > 0;  
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
 
 }
 

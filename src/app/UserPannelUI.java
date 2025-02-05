@@ -4,113 +4,140 @@ import javax.swing.*;
 import java.awt.*;
 
 public class UserPannelUI {
-    private JFrame frame;
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
-
     public UserPannelUI(Users user) {
-        frame = new JFrame("My Quiz App");
+        JFrame frame = new JFrame("My Quiz App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setLayout(new BorderLayout());
         
-        cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
-
-        // Home Page
-        JPanel homePanel = createHomePage(user.name);
-        mainPanel.add(homePanel, "Home");
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(new Color(44, 62, 80));
         
-        // Quiz Page
-        JPanel quizPanel = createPage("Play Quiz");
-        mainPanel.add(quizPanel, "Quiz");
-        
-        // High Scores Page
-        JPanel highScorePanel = createPage("High Scores");
-        mainPanel.add(highScorePanel, "HighScores");
-        
-        // Player Details Page
-        JPanel playerDetailsPanel = createPage("Player Details");
-        mainPanel.add(playerDetailsPanel, "PlayerDetails");
-
-        frame.add(mainPanel);
-        frame.setVisible(true);
-    }
-
-    private JPanel createHomePage(String name) {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(new Color(50, 150, 250)); // Background color
-
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 0, 10, 0);
         gbc.gridx = 0;
-        gbc.gridy = GridBagConstraints.RELATIVE;
-        gbc.insets = new Insets(20, 0, 20, 0);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        JLabel titleLabel = new JLabel("Welcome "+name+" !", SwingConstants.CENTER);
+        
+        JLabel titleLabel = new JLabel("Welcome " + user.getName() + "!", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 48));
         titleLabel.setForeground(Color.WHITE);
-
-        JButton playButton = createStyledButton("Play Quiz");
-        JButton highScoreButton = createStyledButton("View High Scores");
-        JButton playerDetailsButton = createStyledButton("View Player Details");
-
-        playButton.addActionListener(e -> cardLayout.show(mainPanel, "Quiz"));
-        highScoreButton.addActionListener(e -> cardLayout.show(mainPanel, "HighScores"));
-        playerDetailsButton.addActionListener(e -> cardLayout.show(mainPanel, "PlayerDetails"));
-
-        panel.add(titleLabel, gbc);
-        panel.add(playButton, gbc);
-        panel.add(highScoreButton, gbc);
-        panel.add(playerDetailsButton, gbc);
-
-        return panel;
-    }
-
-    private JPanel createPage(String title) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(70, 180, 250));
-
-        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        titleLabel.setForeground(Color.WHITE);
-
-        JButton backButton = new JButton(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png"));
-        backButton.setBorderPainted(false);
-        backButton.setContentAreaFilled(false);
-        backButton.setFocusPainted(false);
-        backButton.setPreferredSize(new Dimension(60, 60));
-        backButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
-
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        topPanel.setOpaque(false);
-        topPanel.add(backButton);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setOpaque(false);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
+        
+        JButton playButton = createButton("Play Quiz", frame, () -> new QuizUI(user));
+        JButton highScoreButton = createButton("View High Scores", frame, () -> new LeaderboardUI(user));
+        JButton playerDetailsButton = createButton("View Player Details", frame, () -> new PlayerDetailsUI(user));
+        JButton logoutButton = createButton("Logout", frame, () -> System.exit(0));
+        
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(20, 0, 20, 0);
-
-        centerPanel.add(titleLabel, gbc);
-
-        panel.add(topPanel, BorderLayout.NORTH);
-        panel.add(centerPanel, BorderLayout.CENTER);
-
-        return panel;
+        mainPanel.add(titleLabel, gbc);
+        gbc.gridy = 1;
+        mainPanel.add(playButton, gbc);
+        gbc.gridy = 2;
+        mainPanel.add(highScoreButton, gbc);
+        gbc.gridy = 3;
+        mainPanel.add(playerDetailsButton, gbc);
+        gbc.gridy = 4;
+        mainPanel.add(logoutButton, gbc);
+        
+        frame.add(mainPanel, BorderLayout.CENTER);
+        frame.setVisible(true);
     }
-
-    private JButton createStyledButton(String text) {
+    
+    private JButton createButton(String text, JFrame frame, Runnable action) {
         JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(300, 80));
         button.setFont(new Font("Arial", Font.BOLD, 20));
-        button.setBackground(Color.WHITE);
-        button.setForeground(new Color(50, 50, 50));
+        button.setBackground(new Color(41, 128, 185));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setPreferredSize(new Dimension(300, 80));
+        button.setOpaque(true);
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        button.addActionListener(e -> {
+            frame.dispose();
+            action.run();
+        });
         return button;
     }
+}
 
-   
+class QuizUI {
+    public QuizUI(Users user) {
+        JFrame frame = new JFrame("Quiz");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setLayout(new BorderLayout());
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(52, 73, 94));
+        
+        JLabel label = new JLabel("Quiz Page", SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 30));
+        label.setForeground(Color.WHITE);
+        
+        JButton backButton = createBackButton(frame, user);
+        
+        panel.add(label);
+        frame.add(backButton, BorderLayout.WEST);
+        frame.add(panel, BorderLayout.CENTER);
+        frame.setVisible(true);
+    }
+    
+    JButton createBackButton(JFrame frame, Users user) {
+        JButton backButton = new JButton("←");
+        backButton.setFont(new Font("Arial", Font.BOLD, 20));
+        backButton.setContentAreaFilled(false);
+        backButton.setBorderPainted(false);
+        backButton.setFocusPainted(false);
+        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new UserPannelUI(user);
+        });
+        return backButton;
+    }
+}
+
+class LeaderboardUI {
+    public LeaderboardUI(Users user) {
+        JFrame frame = new JFrame("High Scores");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setLayout(new BorderLayout());
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(52, 73, 94));
+        
+        JLabel label = new JLabel("High Scores Page", SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 30));
+        label.setForeground(Color.WHITE);
+        
+        JButton backButton = new QuizUI(user).createBackButton(frame, user);
+        
+        panel.add(label);
+        frame.add(backButton, BorderLayout.WEST);
+        frame.add(panel, BorderLayout.CENTER);
+        frame.setVisible(true);
+    }
+}
+
+class PlayerDetailsUI {
+    public PlayerDetailsUI(Users user) {
+        JFrame frame = new JFrame("Player Details");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setLayout(new BorderLayout());
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(52, 73, 94));
+        
+        JLabel label = new JLabel("Player Details Page", SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 30));
+        label.setForeground(Color.WHITE);
+        
+        JButton backButton = new QuizUI(user).createBackButton(frame, user);
+        
+        panel.add(label);
+        frame.add(backButton, BorderLayout.WEST);
+        frame.add(panel, BorderLayout.CENTER);
+        frame.setVisible(true);
+    }
 }

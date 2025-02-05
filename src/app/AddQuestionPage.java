@@ -6,14 +6,14 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class AdminPanel extends JFrame {
+public class AddQuestionPage extends JFrame {
 
     private static final long serialVersionUID = 1L;
     
     private JTextField textFieldQuestion, textFieldAnswer, textFieldOption1, textFieldOption2, textFieldOption3, textFieldOption4;
     private JComboBox<String> comboBoxLevel; 
 
-    public AdminPanel(Users admin) {
+    public AddQuestionPage(Users admin) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
@@ -68,9 +68,9 @@ public class AdminPanel extends JFrame {
         buttonPanel.add(btnAddQuestion);
 
         // Update Question Button
-        JButton btnUpdateQuestion = new JButton("Update and existing question");
+        JButton btnUpdateQuestion = new JButton("Update an existing question");
         styleButton(btnUpdateQuestion, new Color(231, 76, 60), Color.BLACK);
-        btnUpdateQuestion.addActionListener(e -> new UpdatePage(admin));
+        btnUpdateQuestion.addActionListener(e -> new ManageQuestionPages(admin)); //navigates to EditQuestionsPage
         buttonPanel.add(btnUpdateQuestion);
 
         centerPanel.add(buttonPanel, gbc);
@@ -115,24 +115,24 @@ public class AdminPanel extends JFrame {
     private class AddQuestionAction implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             // Convert inputs to uppercase and trim spaces
-            String question = textFieldQuestion.getText().toUpperCase();
-            String answer = textFieldAnswer.getText().toUpperCase();
-            String option1 = textFieldOption1.getText().toUpperCase();
-            String option2 = textFieldOption2.getText().toUpperCase();
-            String option3 = textFieldOption3.getText().toUpperCase();
-            String option4 = textFieldOption4.getText().toUpperCase();
+            String question = textFieldQuestion.getText();
+            String answer = textFieldAnswer.getText();
+            String option1 = textFieldOption1.getText();
+            String option2 = textFieldOption2.getText();
+            String option3 = textFieldOption3.getText();
+            String option4 = textFieldOption4.getText();
             String level = ((String) comboBoxLevel.getSelectedItem()).toUpperCase();
 
             // Validate if any field is empty
             if (question.isEmpty() || answer.isEmpty() || option1.isEmpty() || option2.isEmpty() || option3.isEmpty() || option4.isEmpty()) {
-                JOptionPane.showMessageDialog(AdminPanel.this, "All fields must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(AddQuestionPage.this, "All fields must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             
             ReturnMessage response = JDBC.addQuestion(question, level, answer, option1, option2, option3, option4);
             if (response.success) {
-                JOptionPane.showMessageDialog(AdminPanel.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(AddQuestionPage.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
 
                 // Clear input fields after successful addition
                 textFieldQuestion.setText("");
@@ -144,7 +144,7 @@ public class AdminPanel extends JFrame {
                 comboBoxLevel.setSelectedIndex(0);
 
             } else {
-                JOptionPane.showMessageDialog(AdminPanel.this, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(AddQuestionPage.this, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
