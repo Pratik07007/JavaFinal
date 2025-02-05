@@ -13,7 +13,7 @@ public class AdminPanel extends JFrame {
     private JTextField textFieldQuestion, textFieldAnswer, textFieldOption1, textFieldOption2, textFieldOption3, textFieldOption4;
     private JComboBox<String> comboBoxLevel; 
 
-    public AdminPanel(String fullname) {
+    public AdminPanel(Users admin) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
@@ -37,7 +37,7 @@ public class AdminPanel extends JFrame {
         gbc.gridwidth = 2;
         
         // Welcome Label
-        JLabel lblWelcome = new JLabel("Welcome, " + fullname + "!");
+        JLabel lblWelcome = new JLabel("Welcome, " + admin.name + "!");
         lblWelcome.setFont(new Font("Arial", Font.BOLD, 20));
         lblWelcome.setForeground(Color.BLACK);
         centerPanel.add(lblWelcome, gbc);
@@ -68,9 +68,9 @@ public class AdminPanel extends JFrame {
         buttonPanel.add(btnAddQuestion);
 
         // Update Question Button
-        JButton btnUpdateQuestion = new JButton("Update Question");
+        JButton btnUpdateQuestion = new JButton("Update and existing question");
         styleButton(btnUpdateQuestion, new Color(231, 76, 60), Color.BLACK);
-        btnUpdateQuestion.addActionListener(e -> new UpdatePage());
+        btnUpdateQuestion.addActionListener(e -> new UpdatePage(admin));
         buttonPanel.add(btnUpdateQuestion);
 
         centerPanel.add(buttonPanel, gbc);

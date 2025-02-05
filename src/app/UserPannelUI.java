@@ -8,16 +8,16 @@ public class UserPannelUI {
     private JPanel mainPanel;
     private CardLayout cardLayout;
 
-    public UserPannelUI(String name) {
+    public UserPannelUI(Users user) {
         frame = new JFrame("My Quiz App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Fullscreen
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
         // Home Page
-        JPanel homePanel = createHomePage(name);
+        JPanel homePanel = createHomePage(user.name);
         mainPanel.add(homePanel, "Home");
         
         // Quiz Page

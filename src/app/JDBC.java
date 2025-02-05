@@ -1,5 +1,8 @@
 package app;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class JDBC {
 	
@@ -96,7 +99,7 @@ public class JDBC {
 	    String user = "root";
 	    String pass = "admin@12345";
 	        
-        String query = "SELECT name, password FROM users WHERE email = ?";
+        String query = "SELECT id FROM users WHERE email = ?";
 
         try (Connection connection = DriverManager.getConnection(url, user, pass);
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -125,6 +128,11 @@ public class JDBC {
     String pass = "admin@12345";
         
     String query = "INSERT INTO users (name, email, password,role) VALUES (?, ?, ?,?)";
+    
+    ReturnMessage valid = validEmail(email);
+    if(!valid.success) {
+    	return new ReturnMessage(false, "User or admin with this detail exist", null);
+    }
 
     try (Connection connection = DriverManager.getConnection(url, user, pass);
          PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -183,8 +191,61 @@ public class JDBC {
             }
         	
         }
+	
+	
+
+	
+	public static List<Questions> fetchAndShuffleQuestions() {
+	    List<Questions> questions = new ArrayList<>();
+	    String url = "jdbc:mysql://localhost:3306/quizApp";  
+	    String user = "root";  
+	    String password = "admin@12345";  
+
+	    String query = "SELECT id, question FROM questions";  
+
+	    try (Connection conn = DriverManager.getConnection(url, user, password);
+	         Statement stmt = conn.createStatement();
+	         ResultSet rs = stmt.executeQuery(query)) {
+
+	        while (rs.next()) {
+	            int id = rs.getInt("id");  
+	            String text = rs.getString("question");  
+	            questions.add(new Questions(id, text));  
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    Collections.shuffle(questions);
+	    return questions;
+	}
+	
+	public static boolean deleteQuestion(int questionId) {
+	    String url = "jdbc:mysql://localhost:3306/quizApp";  
+	    String user = "root";  
+	    String password = "admin@12345";  
+
+	    String query = "DELETE FROM questions WHERE id = ?";  
+
+	    try (Connection conn = DriverManager.getConnection(url, user, password);
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setInt(1, questionId);  
+	        int rowsAffected = stmt.executeUpdate();  
+
+	        return rowsAffected > 0;  
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
 
 }
+
+
+    
+
 
 
 
