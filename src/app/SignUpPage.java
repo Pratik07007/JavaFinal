@@ -56,7 +56,7 @@ public class SignUpPage extends JFrame {
 
         JLabel levelLabel = new JLabel("Select Level:");
         styleLabel(levelLabel);
-        String[] levels = {"BEGINNER", "INTERMEDIATE", "ADVANCED"};
+        String[] levels = {"BEGINNER", "INTERMEDIATE", "ADVANCE"};
         JComboBox<String> levelDropdown = new JComboBox<>(levels);
         levelDropdown.setFont(new Font("Arial", Font.PLAIN, 18));
         levelDropdown.setPreferredSize(new Dimension(250, 40));
