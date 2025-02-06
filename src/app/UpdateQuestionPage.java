@@ -15,7 +15,7 @@ public class UpdateQuestionPage extends JFrame {
     private JComboBox<String> comboBoxLevel;
     private Questions question;  // Add this to store the question object
 
-    public UpdateQuestionPage(Questions question,Users admin) {
+    public UpdateQuestionPage(Questions question,Compitetor admin) {
         this.question = question; // Store the question object
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

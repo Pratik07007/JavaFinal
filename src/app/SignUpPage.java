@@ -23,7 +23,6 @@ public class SignUpPage extends JFrame {
         gbc.gridx = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Back Button with Icon
         ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         JButton backButton = new JButton(backIcon);
         backButton.setContentAreaFilled(false);
@@ -31,11 +30,9 @@ public class SignUpPage extends JFrame {
         backButton.setFocusPainted(false);
         backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        backButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                new Home();
-            }
+        backButton.addActionListener(e -> {
+            dispose();
+            new Home();
         });
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -44,81 +41,67 @@ public class SignUpPage extends JFrame {
 
         JLabel nameLabel = new JLabel("Name:");
         styleLabel(nameLabel);
-
         JTextField nameField = new JTextField(20);
         styleTextField(nameField);
 
         JLabel emailLabel = new JLabel("Email:");
         styleLabel(emailLabel);
-
         JTextField emailField = new JTextField(20);
         styleTextField(emailField);
 
         JLabel passwordLabel = new JLabel("Password:");
         styleLabel(passwordLabel);
-
         JPasswordField passwordField = new JPasswordField(20);
         styleTextField(passwordField);
+
+        JLabel levelLabel = new JLabel("Select Level:");
+        styleLabel(levelLabel);
+        String[] levels = {"BEGINNER", "INTERMEDIATE", "ADVANCED"};
+        JComboBox<String> levelDropdown = new JComboBox<>(levels);
+        levelDropdown.setFont(new Font("Arial", Font.PLAIN, 18));
+        levelDropdown.setPreferredSize(new Dimension(250, 40));
 
         JButton signUpButton = new JButton("Sign Up");
         styleButton(signUpButton, new Color(41, 128, 185));
 
-        signUpButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText();
-                String email = emailField.getText();
-                String password = new String(passwordField.getPassword());
-                
-                if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
-                    JOptionPane.showMessageDialog(SignUpPage.this, "Fields cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+        signUpButton.addActionListener(e -> {
+            String name = nameField.getText();
+            String email = emailField.getText();
+            String password = new String(passwordField.getPassword());
+            String level = (String) levelDropdown.getSelectedItem();
 
-                if (password.length() < 6) {
-                    JOptionPane.showMessageDialog(SignUpPage.this, "Password must be at least 6 characters!", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                String hashedPassword = PasswordHash.hashPassword(password);
-                
-                ReturnMessage response = JDBC.registerUser(name, email, hashedPassword);
-                if(response.success) {
-                	JOptionPane.showMessageDialog(SignUpPage.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
-                	dispose();
-                	new SignInPage();
-                }else {
-                	JOptionPane.showMessageDialog(SignUpPage.this, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                
-                
-                
-                
+            if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
+                JOptionPane.showMessageDialog(SignUpPage.this, "Fields cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (password.length() < 6) {
+                JOptionPane.showMessageDialog(SignUpPage.this, "Password must be at least 6 characters!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String hashedPassword = PasswordHash.hashPassword(password);
+            ReturnMessage response = JDBC.registerUser(name, email, hashedPassword, level.toUpperCase());
+
+            if (response.success) {
+                JOptionPane.showMessageDialog(SignUpPage.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+                new SignInPage();
+            } else {
+                JOptionPane.showMessageDialog(SignUpPage.this, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        gbc.gridy = 0;
-        mainPanel.add(nameLabel, gbc);
-
-        gbc.gridy = 1;
-        mainPanel.add(nameField, gbc);
-
-        gbc.gridy = 2;
-        mainPanel.add(emailLabel, gbc);
-
-        gbc.gridy = 3;
-        mainPanel.add(emailField, gbc);
-
-        gbc.gridy = 4;
-        mainPanel.add(passwordLabel, gbc);
-
-        gbc.gridy = 5;
-        mainPanel.add(passwordField, gbc);
-
-        gbc.gridy = 6;
-        mainPanel.add(signUpButton, gbc);
+        gbc.gridy = 0; mainPanel.add(nameLabel, gbc);
+        gbc.gridy = 1; mainPanel.add(nameField, gbc);
+        gbc.gridy = 2; mainPanel.add(emailLabel, gbc);
+        gbc.gridy = 3; mainPanel.add(emailField, gbc);
+        gbc.gridy = 4; mainPanel.add(passwordLabel, gbc);
+        gbc.gridy = 5; mainPanel.add(passwordField, gbc);
+        gbc.gridy = 6; mainPanel.add(levelLabel, gbc);
+        gbc.gridy = 7; mainPanel.add(levelDropdown, gbc);
+        gbc.gridy = 8; mainPanel.add(signUpButton, gbc);
 
         add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
-
         setVisible(true);
     }
 
@@ -141,6 +124,4 @@ public class SignUpPage extends JFrame {
         field.setFont(new Font("Arial", Font.PLAIN, 18));
         field.setPreferredSize(new Dimension(250, 40));
     }
-
-    
 }

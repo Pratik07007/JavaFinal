@@ -76,4 +76,9 @@ public class Questions {
     public void setAnswer(String answer) {
         this.answer = answer;
     }
+
+    public String[] getOptions() {
+        return new String[] { opt1, opt2, opt3, opt4 };
+    }
+
 }

@@ -28,6 +28,7 @@ public class JDBC {
                     String name = response.getString(2);
                     String dbPassword = response.getString(4);
                     String role = response.getString(10);
+                    String level = response.getString(11);
                     
                     Boolean verified =  PasswordHash.verifyPassword(password,dbPassword);
                     
@@ -36,7 +37,7 @@ public class JDBC {
                     
                     
                     if(verified) {
-                    	return new ReturnMessage(true,"Loggin Succesfull", new Users(id,name,email,role));
+                    	return new ReturnMessage(true,"Loggin Succesfull", new Compitetor(id,name,email,role,level));
                     	
                     }else 
                     	
@@ -57,14 +58,14 @@ public class JDBC {
         }
 	
 	
-	public static ReturnMessage registerUser(String name, String email, String password) {
+	public static ReturnMessage registerUser(String name, String email, String password,String level) {
         String url = "jdbc:mysql://localhost:3306/quizApp";
         String user = "root";
         String pass = "admin@12345";
       
         ReturnMessage response = validEmail(email);
         if(response.success) {
-        	String query = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+        	String query = "INSERT INTO users (name, email, password,level) VALUES (?, ?, ?,?)";
             
             try (Connection connection = DriverManager.getConnection(url, user, pass);
                  PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -73,6 +74,7 @@ public class JDBC {
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, email);
                 preparedStatement.setString(3, password);
+                preparedStatement.setString(4, level);
                 
                 // Execute the query and get the generated keys (id)
                 int affectedRows = preparedStatement.executeUpdate();
@@ -275,8 +277,89 @@ public class JDBC {
 	        return false;
 	    }
 	}
+	
+	public static List<Questions> fetchQuestionDifficultyLevel(String level) {
+	    String url = "jdbc:mysql://localhost:3306/quizApp";  
+	    String user = "root";  
+	    String password = "admin@12345";
+	    List<Questions> questions = new ArrayList<>();  
+
+	    // Debug: Print the level and count
+	    
+
+	    String query = "SELECT * FROM questions WHERE level = ? ORDER BY RAND() LIMIT 5";  
+
+	    try (Connection conn = DriverManager.getConnection(url, user, password);
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+	        
+	        stmt.setString(1, level);  
+	        
+
+
+
+	        
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            while (rs.next()) {
+	                questions.add(new Questions(
+	                    rs.getInt("id"),
+	                    rs.getString("question"),
+	                    rs.getString("option1"),
+	                    rs.getString("option2"),
+	                    rs.getString("option3"),
+	                    rs.getString("option4"),
+	                    rs.getString("level"),
+	                    rs.getString("answer")
+	                ));
+	            }
+	        }
+	       
+	        
+	        return questions;
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return Collections.emptyList();  // Return empty list in case of failure
+	    }
+	}
+	
+	 
+	public static boolean updateScore(int userId, String columnName, int score) {
+        String url = "jdbc:mysql://localhost:3306/quizApp";  
+        String user = "root";  
+        String password = "admin@12345";  
+ 
+
+        String query = "UPDATE users SET " + columnName + " = ? WHERE id = ?";  
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, score);
+            stmt.setInt(2, userId);
+
+            int rowsAffected = stmt.executeUpdate();  
+
+            if (rowsAffected > 0) {
+                System.out.println("Score updated successfully for user ID: " + userId);
+                return true;
+            } else {
+                System.out.println("No rows affected. User ID might not exist.");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    
+    
+    
 
 }
+
+
 
 
     

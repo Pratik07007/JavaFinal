@@ -17,7 +17,7 @@ public class PasswordHash {
             byte[] hashBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
             StringBuilder hexString = new StringBuilder();
             for (byte b : hashBytes) {
-                hexString.append(String.format("%02x", b)); // Lowercase hex
+                hexString.append(String.format("%02x", b)); 
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {

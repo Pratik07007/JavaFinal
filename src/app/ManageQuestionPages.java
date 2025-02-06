@@ -12,7 +12,7 @@ public class ManageQuestionPages {
     private JPanel contentPanel;
     private ArrayList<JPanel> questionPanels; // Store question panels to update or delete them
 
-    public ManageQuestionPages(Users admin) {
+    public ManageQuestionPages(Compitetor admin) {
         frame = new JFrame();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximized window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,7 +70,7 @@ public class ManageQuestionPages {
 
     
     
-    public void renderQuestion(Questions question,Users admin) {
+    public void renderQuestion(Questions question,Compitetor admin) {
         JPanel questionPanel = new JPanel();
         questionPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Buttons and label in a horizontal layout
 

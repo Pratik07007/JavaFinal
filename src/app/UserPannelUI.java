@@ -2,9 +2,10 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class UserPannelUI {
-    public UserPannelUI(Users user) {
+    public UserPannelUI(Compitetor user) {
         JFrame frame = new JFrame("My Quiz App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -22,11 +23,11 @@ public class UserPannelUI {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 48));
         titleLabel.setForeground(Color.WHITE);
         
-        JButton playButton = createButton("Play Quiz", frame, () -> new QuizUI(user));
+        JButton playButton = createButton("Play Quiz", frame, () -> new PlayQuiz(user));
         JButton highScoreButton = createButton("View High Scores", frame, () -> new LeaderboardUI(user));
         JButton playerDetailsButton = createButton("View Player Details", frame, () -> new PlayerDetailsUI(user));
         JButton logoutButton = createButton("Logout", frame, () -> System.exit(0));
-        
+        logoutButton.setForeground(Color.RED);
         gbc.gridy = 0;
         mainPanel.add(titleLabel, gbc);
         gbc.gridy = 1;
@@ -59,45 +60,13 @@ public class UserPannelUI {
     }
 }
 
-class QuizUI {
-    public QuizUI(Users user) {
-        JFrame frame = new JFrame("Quiz");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setLayout(new BorderLayout());
-        
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(52, 73, 94));
-        
-        JLabel label = new JLabel("Quiz Page", SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 30));
-        label.setForeground(Color.WHITE);
-        
-        JButton backButton = createBackButton(frame, user);
-        
-        panel.add(label);
-        frame.add(backButton, BorderLayout.WEST);
-        frame.add(panel, BorderLayout.CENTER);
-        frame.setVisible(true);
-    }
-    
-    JButton createBackButton(JFrame frame, Users user) {
-        JButton backButton = new JButton("←");
-        backButton.setFont(new Font("Arial", Font.BOLD, 20));
-        backButton.setContentAreaFilled(false);
-        backButton.setBorderPainted(false);
-        backButton.setFocusPainted(false);
-        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        backButton.addActionListener(e -> {
-            frame.dispose();
-            new UserPannelUI(user);
-        });
-        return backButton;
-    }
-}
+
+
+
+
 
 class LeaderboardUI {
-    public LeaderboardUI(Users user) {
+    public LeaderboardUI(Compitetor user) {
         JFrame frame = new JFrame("High Scores");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -110,8 +79,9 @@ class LeaderboardUI {
         label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setForeground(Color.WHITE);
         
-        JButton backButton = new QuizUI(user).createBackButton(frame, user);
-        
+        ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+        JButton backButton = new JButton(backIcon);
+       
         panel.add(label);
         frame.add(backButton, BorderLayout.WEST);
         frame.add(panel, BorderLayout.CENTER);
@@ -120,7 +90,7 @@ class LeaderboardUI {
 }
 
 class PlayerDetailsUI {
-    public PlayerDetailsUI(Users user) {
+    public PlayerDetailsUI(Compitetor user) {
         JFrame frame = new JFrame("Player Details");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -133,7 +103,9 @@ class PlayerDetailsUI {
         label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setForeground(Color.WHITE);
         
-        JButton backButton = new QuizUI(user).createBackButton(frame, user);
+        ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+        JButton backButton = new JButton(backIcon);
+       
         
         panel.add(label);
         frame.add(backButton, BorderLayout.WEST);

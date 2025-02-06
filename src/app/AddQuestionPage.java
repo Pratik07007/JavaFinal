@@ -13,7 +13,7 @@ public class AddQuestionPage extends JFrame {
     private JTextField textFieldQuestion, textFieldAnswer, textFieldOption1, textFieldOption2, textFieldOption3, textFieldOption4;
     private JComboBox<String> comboBoxLevel; 
 
-    public AddQuestionPage(Users admin) {
+    public AddQuestionPage(Compitetor admin) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
