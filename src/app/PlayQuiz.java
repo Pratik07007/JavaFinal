@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.List;
 
 public class PlayQuiz {
@@ -22,7 +23,8 @@ public class PlayQuiz {
 
     private void showNextSetOfQuestions() {
         // Fetch the questions for the current difficulty level
-        List<Questions> questions = JDBC.fetchQuestionDifficultyLevel(user.getLevel().toUpperCase());
+        List<Questions> questions = JDBC.fetchRandomQuestionsByDifficulty(user.getLevel().toUpperCase());
+        Collections.shuffle(questions);
 
         if (questions.isEmpty()) {
             System.out.println("No questions found.");

@@ -280,7 +280,7 @@ public class JDBC {
 	    }
 	}
 	
-	public static List<Questions> fetchQuestionDifficultyLevel(String level) {
+	public static List<Questions> fetchRandomQuestionsByDifficulty(String level) {
 	    String url = "jdbc:mysql://localhost:3306/quizApp";  
 	    String user = "root";  
 	    String password = "admin@12345";
@@ -399,6 +399,50 @@ public class JDBC {
             return new ReturnMessage(false, "Server-side exception occurred", null);
         }
     }
+	
+	public static ReturnMessage getAllUsers() {
+		
+		String url = "jdbc:mysql://localhost:3306/quizApp";
+	    String userName = "root";
+	    String pass = "admin@12345";
+	        
+	    String query = "SELECT * FROM users WHERE role = 'USER'";
+
+
+        try (Connection connection = DriverManager.getConnection(url, userName, pass);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            
+            
+            ResultSet rs = preparedStatement.executeQuery();
+            
+            if (rs.next()) {
+            	int id = rs.getInt("id");
+ 	            String name = rs.getString("name");
+ 	            String email_db = rs.getString("email");
+ 	            int score1 = rs.getInt("score1");
+ 	           int score2 = rs.getInt("score2");
+ 	          int score3 = rs.getInt("score3");
+ 	         int score4 = rs.getInt("score4");
+ 	        int score5 = rs.getInt("score5");
+ 	        int[] scroes = {score1,score2,score3,score4,score5};
+ 	            String role = rs.getString("role").toUpperCase();
+ 	            
+ 	            String level = rs.getString("level");
+ 	            
+ 	            
+            	Compitetor user = new Compitetor(id,name,email_db,role,level,scroes) ;
+                return new ReturnMessage(true, "User Found!", user);
+            } else {
+            	
+                return new ReturnMessage(false, "No user foud with this email", null);
+            }
+            
+        } catch (SQLException exception) {
+            System.out.println(exception);
+            return new ReturnMessage(false, "Server-side exception occurred", null);
+        }
+    }
+    
     
     
     
