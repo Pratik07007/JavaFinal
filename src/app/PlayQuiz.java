@@ -38,12 +38,13 @@ public class PlayQuiz {
         frame = new JFrame("Quiz");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setSize(600, 500);
-        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout(10, 10));
 
         // Create a panel to hold the questions
         questionPanel = new JPanel();
         questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
+        questionPanel.setBackground(new Color(245, 245, 245));
 
         // Initialize the button groups and option buttons
         buttonGroups = new ButtonGroup[questions.size()];
@@ -55,10 +56,12 @@ public class PlayQuiz {
             // Create a panel for each question
             JPanel singleQuestionPanel = new JPanel();
             singleQuestionPanel.setLayout(new BoxLayout(singleQuestionPanel, BoxLayout.Y_AXIS));
+            singleQuestionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));  // Add margin to each question panel
 
             // Display the question
             JLabel questionLabel = new JLabel("<html><b>" + question.getText() + "</b></html>");
-            questionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            questionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
             singleQuestionPanel.add(questionLabel);
 
             // Create radio buttons for the options
@@ -66,7 +69,9 @@ public class PlayQuiz {
             int optionIndex = 0;
             for (String option : question.getOptions()) {
                 JRadioButton optionButton = new JRadioButton(option);
-                optionButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+                optionButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+                optionButton.setFont(new Font("Arial", Font.PLAIN, 16));
+                optionButton.setBackground(new Color(245, 245, 245)); 
                 group.add(optionButton);
                 singleQuestionPanel.add(optionButton);
                 optionButtons[questionIndex][optionIndex] = optionButton;
@@ -79,12 +84,17 @@ public class PlayQuiz {
             questionIndex++;
         }
 
-        // Add the question panel to the frame
+        // Add the question panel to the frame inside a scroll pane for smooth navigation
         JScrollPane scrollPane = new JScrollPane(questionPanel);
-        frame.add(scrollPane);
+        frame.add(scrollPane, BorderLayout.CENTER);
 
-        // Add the submit button
+        // Add the submit button with proper styling and alignment
         JButton submitButton = new JButton("Submit");
+        submitButton.setFont(new Font("Arial", Font.BOLD, 18));
+        submitButton.setBackground(new Color(41, 128, 185));
+        submitButton.setForeground(Color.BLACK);
+        submitButton.setFocusPainted(false);
+        submitButton.setPreferredSize(new Dimension(200, 60));
         submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         submitButton.addActionListener(new ActionListener() {
             @Override
@@ -108,17 +118,22 @@ public class PlayQuiz {
 
                 // Check if the maximum score (5) has been reached
                 if (user.getScoreCount() >= 5) {
-                    JOptionPane.showMessageDialog(frame, "You have completed all 5 rounds. Your score will be availabe in the get details section");
-                    System.exit(0);  
+                    JOptionPane.showMessageDialog(frame, "You have completed all 5 rounds. Your score will be available in the get details section");
+                    frame.dispose();
+                    new UserPannelUI(user);
+//                    
                 } else {
-                   
                     showNextSetOfQuestions();
                 }
             }
         });
 
-        // Add the submit button to the frame
-        frame.add(submitButton);
+        // Add the submit button to the bottom of the frame with padding
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
+        buttonPanel.add(submitButton);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
 
         // Make the frame visible
         frame.setVisible(true);
