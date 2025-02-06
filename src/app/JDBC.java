@@ -30,6 +30,8 @@ public class JDBC {
                     String role = response.getString(10);
                     String level = response.getString(11);
                     
+                    int [] scores=  {response.getInt(5),response.getInt(6),response.getInt(7),response.getInt(8),response.getInt(9)};
+                    
                     Boolean verified =  PasswordHash.verifyPassword(password,dbPassword);
                     
 //                    System.out.println(dbPassword);
@@ -37,7 +39,7 @@ public class JDBC {
                     
                     
                     if(verified) {
-                    	return new ReturnMessage(true,"Loggin Succesfull", new Compitetor(id,name,email,role,level));
+                    	return new ReturnMessage(true,"Loggin Succesfull", new Compitetor(id,name,email,role,level,scores));
                     	
                     }else 
                     	
@@ -352,7 +354,51 @@ public class JDBC {
             return false;
         }
     }
+	
+	
 
+	public static ReturnMessage getUserByEmail(String email) {
+		
+		String url = "jdbc:mysql://localhost:3306/quizApp";
+	    String userName = "root";
+	    String pass = "admin@12345";
+	        
+	    String query = "SELECT * FROM users WHERE email = ? AND role = 'USER'";
+
+
+        try (Connection connection = DriverManager.getConnection(url, userName, pass);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            
+            preparedStatement.setString(1, email);
+            ResultSet rs = preparedStatement.executeQuery();
+            
+            if (rs.next()) {
+            	int id = rs.getInt("id");
+ 	            String name = rs.getString("name");
+ 	            String email_db = rs.getString("email");
+ 	            int score1 = rs.getInt("score1");
+ 	           int score2 = rs.getInt("score2");
+ 	          int score3 = rs.getInt("score3");
+ 	         int score4 = rs.getInt("score4");
+ 	        int score5 = rs.getInt("score5");
+ 	        int[] scroes = {score1,score2,score3,score4,score5};
+ 	            String role = rs.getString("role").toUpperCase();
+ 	            
+ 	            String level = rs.getString("level");
+ 	            
+ 	            
+            	Compitetor user = new Compitetor(id,name,email_db,role,level,scroes) ;
+                return new ReturnMessage(true, "User Found!", user);
+            } else {
+            	
+                return new ReturnMessage(false, "No user foud with this email", null);
+            }
+            
+        } catch (SQLException exception) {
+            System.out.println(exception);
+            return new ReturnMessage(false, "Server-side exception occurred", null);
+        }
+    }
     
     
     

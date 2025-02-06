@@ -22,7 +22,7 @@ public class PlayQuiz {
 
     private void showNextSetOfQuestions() {
         // Fetch the questions for the current difficulty level
-        List<Questions> questions = JDBC.fetchQuestionDifficultyLevel(user.level.toUpperCase());
+        List<Questions> questions = JDBC.fetchQuestionDifficultyLevel(user.getLevel().toUpperCase());
 
         if (questions.isEmpty()) {
             System.out.println("No questions found.");
@@ -144,7 +144,7 @@ public class PlayQuiz {
         String scoreColumn = "score" + (user.getScoreCount() + 1);
 
         // Update the score in the database
-        JDBC.updateScore(user.id, scoreColumn, score);
+        JDBC.updateScore(user.getId(), scoreColumn, score);
 
         // Increment the user's score count
         user.incrementScoreCount();

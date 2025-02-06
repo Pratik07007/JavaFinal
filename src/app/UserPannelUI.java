@@ -2,6 +2,8 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class UserPannelUI {
@@ -67,6 +69,11 @@ public class UserPannelUI {
 
 class LeaderboardUI {
     public LeaderboardUI(Compitetor user) {
+//    	int[] scores = user.getScores();
+//    	for (int score : scores) {
+//    		System.out.println(score);
+//			
+//		}
         JFrame frame = new JFrame("High Scores");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -81,6 +88,11 @@ class LeaderboardUI {
         
         ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         JButton backButton = new JButton(backIcon);
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new UserPannelUI(user); 
+            
+        });
        
         panel.add(label);
         frame.add(backButton, BorderLayout.WEST);
@@ -89,27 +101,102 @@ class LeaderboardUI {
     }
 }
 
-class PlayerDetailsUI {
+ class PlayerDetailsUI {
+    private JLabel nameLabel, emailLabel, levelLabel, scoreLabel,fullDetailsLabel;
+    private JPanel detailsPanel;
+
     public PlayerDetailsUI(Compitetor user) {
         JFrame frame = new JFrame("Player Details");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setSize(600, 400);
         frame.setLayout(new BorderLayout());
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setBackground(new Color(52, 73, 94));
+        inputPanel.setLayout(new FlowLayout());
         
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(52, 73, 94));
+        JTextField searchField = new JTextField(10);
+        JButton seeResultButton = new JButton("See Result");
+        seeResultButton.setFont(new Font("Arial", Font.BOLD, 14));
         
-        JLabel label = new JLabel("Player Details Page", SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 30));
-        label.setForeground(Color.WHITE);
+        inputPanel.add(new JLabel("Enter Player ID: "));
+        inputPanel.add(searchField);
+        inputPanel.add(seeResultButton);
+
+        detailsPanel = new JPanel();
+        detailsPanel.setBackground(new Color(44, 62, 80));
+        detailsPanel.setLayout(new GridLayout(5, 1, 10, 10));
+        detailsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.WHITE), "Player Details", 0, 0, new Font("Arial", Font.BOLD, 16), Color.WHITE));
+
+        nameLabel = new JLabel("Name: " + user.getName());
+        emailLabel = new JLabel("Email: " + user.getEmail());
+        
+        levelLabel = new JLabel("Level: " + user.getLevel());
+        scoreLabel = new JLabel("Overall Score: " + user.getOverallScore()+"/25");
+        fullDetailsLabel = new JLabel(user.getFullDetails());
         
         ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         JButton backButton = new JButton(backIcon);
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new UserPannelUI(user); 
+            
+        });
        
+
+        Font labelFont = new Font("Arial", Font.BOLD, 18);
+        nameLabel.setFont(labelFont);
+        emailLabel.setFont(labelFont);
         
-        panel.add(label);
-        frame.add(backButton, BorderLayout.WEST);
-        frame.add(panel, BorderLayout.CENTER);
+        levelLabel.setFont(labelFont);
+        scoreLabel.setFont(labelFont);
+        fullDetailsLabel.setFont(labelFont);
+        
+//        scoreLabel.setFont(labelFont);
+        
+        nameLabel.setForeground(Color.WHITE);
+        emailLabel.setForeground(Color.WHITE);
+        fullDetailsLabel.setForeground(Color.WHITE);
+        
+        levelLabel.setForeground(Color.WHITE);
+        scoreLabel.setForeground(Color.WHITE);
+        fullDetailsLabel.setForeground(Color.WHITE);
+        
+
+        detailsPanel.add(nameLabel);
+        detailsPanel.add(emailLabel);
+        detailsPanel.add(fullDetailsLabel);
+        
+        detailsPanel.add(levelLabel);
+        detailsPanel.add(scoreLabel);
+    
+        
+
+        seeResultButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String inputId = searchField.getText();
+                ReturnMessage response = JDBC.getUserByEmail(inputId);
+                if (!response.success) {
+                    JOptionPane.showMessageDialog(frame, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    Compitetor newUser = response.user;
+                    nameLabel.setText("Name: " + newUser.getName());
+                    emailLabel.setText("Email: " + newUser.getEmail());
+                    levelLabel.setText("Level: " + newUser.getLevel());
+                    scoreLabel.setText("Overall Score: " + newUser.getOverallScore()+"/25");
+                    fullDetailsLabel.setText(newUser.getFullDetails());
+                    detailsPanel.revalidate();
+                    detailsPanel.repaint();
+                }
+            }
+        });
+
+        frame.add(inputPanel, BorderLayout.NORTH);
+        frame.add(detailsPanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
+
+
 }

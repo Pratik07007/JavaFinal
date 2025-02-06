@@ -76,7 +76,7 @@ public class SignInPage extends JFrame {
                 ReturnMessage response =  JDBC.chekLogin(email,password);
                 if(response.success) {
                 	JOptionPane.showMessageDialog(SignInPage.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
-                	if(response.user.role.equals("USER")) {
+                	if(response.user.getRole().equals("USER")) {
                 		dispose();
                 		new UserPannelUI(response.user); 
                 	}else {

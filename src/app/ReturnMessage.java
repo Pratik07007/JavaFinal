@@ -11,7 +11,5 @@ public class ReturnMessage {
 		this.msg=msg;
 		this.user= user;
 	}
-	
-	
 
 }

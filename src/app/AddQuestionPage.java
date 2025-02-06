@@ -37,7 +37,7 @@ public class AddQuestionPage extends JFrame {
         gbc.gridwidth = 2;
         
         // Welcome Label
-        JLabel lblWelcome = new JLabel("Welcome, " + admin.name + "!");
+        JLabel lblWelcome = new JLabel("Welcome, " + admin.getName() + "!");
         lblWelcome.setFont(new Font("Arial", Font.BOLD, 20));
         lblWelcome.setForeground(Color.BLACK);
         centerPanel.add(lblWelcome, gbc);
