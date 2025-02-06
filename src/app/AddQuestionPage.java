@@ -19,12 +19,13 @@ public class AddQuestionPage extends JFrame {
         
         // Set the content pane to use BorderLayout
         JPanel contentPane = new JPanel(new BorderLayout());
-        contentPane.setBorder(new EmptyBorder(20, 20, 20, 20)); 
+        contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
+        contentPane.setBackground(new Color(44, 62, 80));
         setContentPane(contentPane);
         
         // Create a center panel that uses GridBagLayout to center its content
         JPanel centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setBackground(new Color(245, 245, 245));
+        centerPanel.setBackground(new Color(44, 62, 80));
         contentPane.add(centerPanel, BorderLayout.CENTER);
         
         // Create GridBagConstraints for consistent spacing and centering
@@ -39,7 +40,7 @@ public class AddQuestionPage extends JFrame {
         // Welcome Label
         JLabel lblWelcome = new JLabel("Welcome, " + admin.getName() + "!");
         lblWelcome.setFont(new Font("Arial", Font.BOLD, 20));
-        lblWelcome.setForeground(Color.BLACK);
+        lblWelcome.setForeground(Color.WHITE);
         centerPanel.add(lblWelcome, gbc);
         
         // Reset gridwidth for subsequent rows
@@ -94,7 +95,7 @@ public class AddQuestionPage extends JFrame {
         gbc.anchor = GridBagConstraints.EAST;
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("Arial", Font.BOLD, 16));
-        label.setForeground(Color.BLACK);
+        label.setForeground(Color.WHITE);
         panel.add(label, gbc);
 
         gbc.gridx = 1;

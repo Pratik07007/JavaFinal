@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
-
 public class PlayQuiz {
 
     private Compitetor user;
@@ -46,7 +45,7 @@ public class PlayQuiz {
         // Create a panel to hold the questions
         questionPanel = new JPanel();
         questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
-        questionPanel.setBackground(new Color(245, 245, 245));
+        questionPanel.setBackground(new Color(44, 62, 80));  // Updated to match the color theme
 
         // Initialize the button groups and option buttons
         buttonGroups = new ButtonGroup[questions.size()];
@@ -59,10 +58,12 @@ public class PlayQuiz {
             JPanel singleQuestionPanel = new JPanel();
             singleQuestionPanel.setLayout(new BoxLayout(singleQuestionPanel, BoxLayout.Y_AXIS));
             singleQuestionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));  // Add margin to each question panel
+            singleQuestionPanel.setBackground(new Color(44, 62, 80));  // Match the background color of the main panel
 
             // Display the question
             JLabel questionLabel = new JLabel("<html><b>" + question.getText() + "</b></html>");
             questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            questionLabel.setForeground(Color.WHITE);  // Set text color to white
             questionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
             singleQuestionPanel.add(questionLabel);
 
@@ -73,7 +74,8 @@ public class PlayQuiz {
                 JRadioButton optionButton = new JRadioButton(option);
                 optionButton.setAlignmentX(Component.LEFT_ALIGNMENT);
                 optionButton.setFont(new Font("Arial", Font.PLAIN, 16));
-                optionButton.setBackground(new Color(245, 245, 245)); 
+                optionButton.setBackground(new Color(44, 62, 80));  // Set the background color of options
+                optionButton.setForeground(Color.WHITE);  // Set text color to white
                 group.add(optionButton);
                 singleQuestionPanel.add(optionButton);
                 optionButtons[questionIndex][optionIndex] = optionButton;
@@ -93,7 +95,7 @@ public class PlayQuiz {
         // Add the submit button with proper styling and alignment
         JButton submitButton = new JButton("Submit");
         submitButton.setFont(new Font("Arial", Font.BOLD, 18));
-        submitButton.setBackground(new Color(41, 128, 185));
+        submitButton.setBackground(new Color(41, 128, 185));  // Keep submit button color
         submitButton.setForeground(Color.BLACK);
         submitButton.setFocusPainted(false);
         submitButton.setPreferredSize(new Dimension(200, 60));
@@ -123,7 +125,6 @@ public class PlayQuiz {
                     JOptionPane.showMessageDialog(frame, "You have completed all 5 rounds. Your score will be available in the get details section");
                     frame.dispose();
                     new UserPannelUI(user);
-//                    
                 } else {
                     showNextSetOfQuestions();
                 }
@@ -133,9 +134,11 @@ public class PlayQuiz {
         // Add the submit button to the bottom of the frame with padding
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
+        buttonPanel.setBackground(new Color(44, 62, 80));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
         buttonPanel.add(submitButton);
         frame.add(buttonPanel, BorderLayout.SOUTH);
+        
 
         // Make the frame visible
         frame.setVisible(true);

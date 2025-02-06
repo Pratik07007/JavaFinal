@@ -27,7 +27,13 @@ public class UserPannelUI {
         
         JButton playButton = createButton("Play Quiz", frame, () -> new PlayQuiz(user));
         JButton highScoreButton = createButton("View High Scores", frame, () -> new LeaderboardUI(user));
-        JButton playerDetailsButton = createButton("View Player Details", frame, () -> new PlayerDetailsUI(user));
+        JButton playerDetailsButton = createButton("View Player Details", frame, null);
+        
+        playerDetailsButton.addActionListener(e -> {
+        	
+        	new PlayerDetailsUI(user);
+            
+        });
         JButton logoutButton = createButton("Logout", frame, () -> System.exit(0));
         logoutButton.setForeground(Color.RED);
         gbc.gridy = 0;
@@ -69,11 +75,6 @@ public class UserPannelUI {
 
 class LeaderboardUI {
     public LeaderboardUI(Compitetor user) {
-//    	int[] scores = user.getScores();
-//    	for (int score : scores) {
-//    		System.out.println(score);
-//			
-//		}
         JFrame frame = new JFrame("High Scores");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -108,8 +109,7 @@ class LeaderboardUI {
     public PlayerDetailsUI(Compitetor user) {
         JFrame frame = new JFrame("Player Details");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setSize(600, 400);
+        frame.setSize(800, 400);
         frame.setLayout(new BorderLayout());
 
         JPanel inputPanel = new JPanel();
@@ -135,15 +135,7 @@ class LeaderboardUI {
         levelLabel = new JLabel("Level: " + user.getLevel());
         scoreLabel = new JLabel("Overall Score: " + user.getOverallScore()+"/25");
         fullDetailsLabel = new JLabel(user.getFullDetails());
-        
-        ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-        JButton backButton = new JButton(backIcon);
-        backButton.addActionListener(e -> {
-            frame.dispose();
-            new UserPannelUI(user); 
-            
-        });
-       
+               
 
         Font labelFont = new Font("Arial", Font.BOLD, 18);
         nameLabel.setFont(labelFont);
