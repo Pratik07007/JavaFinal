@@ -17,6 +17,7 @@ public class Compitetor {
         this.level = level;
         this.scores = scores;
     }
+   
 
     public String getLevel() {
         return level;
@@ -66,29 +67,18 @@ public class Compitetor {
             return 0;
         }
 
-        double weight = 1.0;
-        switch (level.toUpperCase()) {
-            case "BEGINNER":
-                weight = 1.0;
-                break;
-            case "INTERMEDIATE":
-                weight = 1.3;
-                break;
-            case "ADVANCED":
-                weight = 1.5;
-                break;
-        }
-
+        
         double sum = 0;
         for (int score : scores) {
             sum += score;
         }
-        double average = sum;
         
-        if(average * weight>=25) {
-        	return 25.00;
-        }
+        
 
-        return Math.round(average * weight);
+        return sum;
     }
+
+	public void setScores(int[] scores) {
+		this.scores = scores;
+	}
 }

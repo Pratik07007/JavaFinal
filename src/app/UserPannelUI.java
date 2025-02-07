@@ -62,7 +62,12 @@ public class UserPannelUI {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         button.addActionListener(e -> {
             frame.dispose();
-            action.run();
+            try {
+				
+            	action.run();
+			} catch (Exception e2) {
+				System.out.println(e2);
+			}
         });
         return button;
     }
@@ -138,12 +143,15 @@ class LeaderboardUI {
                
 
         Font labelFont = new Font("Arial", Font.BOLD, 18);
+        Font descriptionFont = new Font("Arial", Font.ITALIC, 20);
+        
         nameLabel.setFont(labelFont);
         emailLabel.setFont(labelFont);
         
+        
         levelLabel.setFont(labelFont);
         scoreLabel.setFont(labelFont);
-        fullDetailsLabel.setFont(labelFont);
+        fullDetailsLabel.setFont(descriptionFont);
         
 //        scoreLabel.setFont(labelFont);
         
@@ -158,10 +166,10 @@ class LeaderboardUI {
 
         detailsPanel.add(nameLabel);
         detailsPanel.add(emailLabel);
-        detailsPanel.add(fullDetailsLabel);
         
         detailsPanel.add(levelLabel);
         detailsPanel.add(scoreLabel);
+        detailsPanel.add(fullDetailsLabel);
     
         
 

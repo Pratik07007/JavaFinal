@@ -148,10 +148,27 @@ public class PlayQuiz {
         // Get the current score column based on the user's score count
         String scoreColumn = "score" + (user.getScoreCount() + 1);
 
-        // Update the score in the database
-        JDBC.updateScore(user.getId(), scoreColumn, score);
+        // Update the individual round score
+        Boolean response = JDBC.updateScore(user.getId(), scoreColumn, score);
+        if(!response) {
+        	JOptionPane.showMessageDialog(frame, "Something Went wrong");
+        	frame.dispose();
+        }
 
         // Increment the user's score count
         user.incrementScoreCount();
+
+        // Fetch updated scores from the database
+        int[] updatedScores = JDBC.fetchUserScores(user.getId());
+
+        // Update the user's scores array
+        user.setScores(updatedScores);
+
+        // Calculate overall score
+        double overallScore = user.getOverallScore();
+
+        // Update the overall score in the database
+        JDBC.updateOverallScore(user.getId(), overallScore);
     }
+
 }

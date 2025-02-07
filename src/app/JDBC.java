@@ -442,6 +442,48 @@ public class JDBC {
             return new ReturnMessage(false, "Server-side exception occurred", null);
         }
     }
+	public static void updateOverallScore(int userId, double overallScore) {
+		String url = "jdbc:mysql://localhost:3306/quizApp";
+	    String userName = "root";
+	    String pass = "admin@12345";
+	    String query = "UPDATE users SET overallScore = ? WHERE id = ?";
+	    
+	    try (Connection conn = DriverManager.getConnection(url, userName, pass);
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+	        stmt.setDouble(1, overallScore);
+	        stmt.setInt(2, userId);
+	        stmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public static int[] fetchUserScores(int userId) {
+		String url = "jdbc:mysql://localhost:3306/quizApp";
+	    String userName = "root";
+	    String pass = "admin@12345";
+	   
+	    
+	    String query = "SELECT score1, score2, score3, score4 FROM users WHERE id = ?";
+	    int[] scores = new int[4];
+
+	    try (Connection conn = DriverManager.getConnection(url, userName, pass);
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+	        stmt.setInt(1, userId);
+	        ResultSet rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            for (int i = 0; i < 4; i++) {
+	                scores[i] = rs.getInt(i + 1); 
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return scores;
+	}
+
+
     
     
     
