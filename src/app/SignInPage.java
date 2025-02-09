@@ -77,7 +77,7 @@ public class SignInPage extends JFrame {
                     JOptionPane.showMessageDialog(SignInPage.this, "Password must be at least 6 characters!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                ReturnMessage response =  JDBC.chekLogin(email,password);
+                ReturnMessage response =  JDBC.checkLogin(email,password);
                 if(response.success) {
                 	JOptionPane.showMessageDialog(SignInPage.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
                 	if(response.user.getRole().equals("USER")) {

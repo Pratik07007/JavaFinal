@@ -9,7 +9,7 @@ import javax.swing.border.EmptyBorder;
 public class AddQuestionPage extends JFrame {
 
     private static final long serialVersionUID = 1L;
-    
+
     private JTextField textFieldQuestion, textFieldAnswer, textFieldOption1, textFieldOption2, textFieldOption3, textFieldOption4;
     private JComboBox<String> comboBoxLevel;
 
@@ -66,6 +66,7 @@ public class AddQuestionPage extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setBackground(new Color(44, 62, 80));
 
         // Add Question Button
         JButton btnAddQuestion = new JButton("Add Question");
@@ -96,7 +97,7 @@ public class AddQuestionPage extends JFrame {
         backButton.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         backButton.setBackground(new Color(44, 62, 80));
         backButton.addActionListener(e -> {
-        	new AdminPanelUI(admin);
+            new AdminPanelUI(admin);
             dispose();
         });
         return backButton;
@@ -115,6 +116,7 @@ public class AddQuestionPage extends JFrame {
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
         field.setFont(new Font("Arial", Font.PLAIN, 16));
+        field.setPreferredSize(new Dimension(250, 40)); // Increased height for better visual appearance
         panel.add(field, gbc);
     }
 
