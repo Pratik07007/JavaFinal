@@ -4,9 +4,9 @@ package app;
  * Represents a return message containing success status, a message, and a user.
  */
 public class ReturnMessage {
-    boolean success;  // Indicates whether the operation was successful
-    String msg;       // Message describing the result
-    Compitetor user;  // The user associated with the message
+    public boolean success;  // Indicates whether the operation was successful
+    public String msg;       // Message describing the result
+    public Compitetor user;  // The user associated with the message
 
     /**
      * Constructs a ReturnMessage object.

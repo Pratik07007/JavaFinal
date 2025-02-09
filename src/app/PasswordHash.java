@@ -16,7 +16,7 @@ public class PasswordHash {
      * @param storedHashedPassword The stored hashed password (e.g., from the database).
      * @return {@code true} if the input password matches the stored hashed password, {@code false} otherwise.
      */
-    static boolean verifyPassword(String inputPassword, String storedHashedPassword) {
+    public static boolean verifyPassword(String inputPassword, String storedHashedPassword) {
         return hashPassword(inputPassword).equals(storedHashedPassword);
     }
 
@@ -27,7 +27,7 @@ public class PasswordHash {
      * @return A string representing the hashed password in hexadecimal format.
      * @throws RuntimeException If there is an error during the hashing process (e.g., unsupported algorithm).
      */
-    static String hashPassword(String password) {
+    public static String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256"); // Initialize SHA-256 MessageDigest
             // Use UTF-8 encoding to convert the password into bytes consistently

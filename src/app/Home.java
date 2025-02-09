@@ -84,7 +84,7 @@ public class Home extends JFrame {
      *
      * @param button The JButton to style.
      */
-    private void styleButton(JButton button) {
+    public static void styleButton(JButton button) {
         button.setFont(new Font("Arial", Font.BOLD, 20));
         button.setBackground(Color.WHITE);
         button.setForeground(Color.BLACK);

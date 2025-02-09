@@ -2,6 +2,7 @@ package app;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.sql.*;
 
@@ -121,6 +122,7 @@ public class ViewStats extends JFrame {
             String sql = "SELECT id, name, email, level, score1, score2, score3, score4, score5 FROM users WHERE role = 'USER'";
             if (email != null && !email.isEmpty()) sql += " AND email = ?";
             if (!"ALL".equals(level)) sql += " AND level = ?";
+            sql += " ORDER BY (score1 + score2 + score3 + score4 + score5) DESC";  // Sorting by overall score descending
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             int paramIndex = 1;
@@ -152,6 +154,13 @@ public class ViewStats extends JFrame {
                         overallScore
                 });
             }
+
+            // Adjust column widths
+            TableColumn emailColumn = table.getColumnModel().getColumn(2); // Email column
+            emailColumn.setPreferredWidth(200);  // Increase space for email column
+            TableColumn overallScoreColumn = table.getColumnModel().getColumn(9); // Overall Score column
+            overallScoreColumn.setPreferredWidth(100);  // Adjust size for Overall Score
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Database error!", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -175,7 +184,8 @@ public class ViewStats extends JFrame {
         String password = "admin@12345";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            String sql = "SELECT COUNT(*) AS totalPlayers, MAX(overallScore) AS highest, MIN(overallScore) AS lowest, AVG(overallScore) AS mean, " +
+            String sql = "SELECT COUNT(*) AS totalPlayers, MAX(score1 + score2 + score3 + score4 + score5) AS highest, " +
+                         "MIN(score1 + score2 + score3 + score4 + score5) AS lowest, AVG(score1 + score2 + score3 + score4 + score5) AS mean, " +
                          "SUM(score1 + score2 + score3 + score4 + score5) AS totalScores " +
                          "FROM users WHERE role = 'USER'";
             PreparedStatement stmt = conn.prepareStatement(sql);
