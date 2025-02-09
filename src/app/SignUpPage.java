@@ -74,6 +74,10 @@ public class SignUpPage extends JFrame {
                 JOptionPane.showMessageDialog(SignUpPage.this, "Fields cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            if(!EmailValidiator.isValidEmail(email)) {
+            	JOptionPane.showMessageDialog(SignUpPage.this, "Please Enter a Valid email", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (password.length() < 6) {
                 JOptionPane.showMessageDialog(SignUpPage.this, "Password must be at least 6 characters!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;

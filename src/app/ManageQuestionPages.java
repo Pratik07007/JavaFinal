@@ -39,12 +39,13 @@ public class ManageQuestionPages {
         // Back button with custom styling
         ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         JButton backButton = new JButton(backIcon);
+       
   
         backButton.addActionListener(e -> {
             frame.dispose();
-            new AddQuestionPage(admin);
+            new AdminPanelUI(admin);
         });
-        contentPanel.add(backButton);
+        contentPanel.add(backButton,BorderLayout.WEST);
 
         // Title label with dark theme
         JLabel lblTitle = new JLabel("Manage Questions", SwingConstants.CENTER);

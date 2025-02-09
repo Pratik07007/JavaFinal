@@ -21,7 +21,6 @@ public class Home extends JFrame {
 
         JButton signUpButton = new JButton("Sign Up");
         JButton signInButton = new JButton("Sign In");
-
         styleButton(signUpButton);
         styleButton(signInButton);
         

@@ -54,9 +54,16 @@ public class SuperAdmin extends JFrame {
                     JOptionPane.showMessageDialog(SuperAdmin.this, "Fields cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                
+                
 
                 if (password.length() < 6) {
                     JOptionPane.showMessageDialog(SuperAdmin.this, "Password must be at least 6 characters!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                if(!EmailValidiator.isValidEmail(email)) {
+                	JOptionPane.showMessageDialog(SuperAdmin.this, "Please Enter a Valid email", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 ReturnMessage response =  JDBC.addAdmin(email,password,name);

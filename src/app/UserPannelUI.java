@@ -1,86 +1,31 @@
 package app;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.List;
+import java.util.Map;
 
 public class UserPannelUI {
     public UserPannelUI(Compitetor user) {
-        JFrame frame = new JFrame("My Quiz App");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setLayout(new BorderLayout());
-        
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(new Color(44, 62, 80));
-        
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 0, 10, 0);
-        gbc.gridx = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-        JLabel titleLabel = new JLabel("Welcome " + user.getName() + "!", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 48));
-        titleLabel.setForeground(Color.WHITE);
-        
-        JButton playButton = createButton("Play Quiz", frame, () -> new PlayQuiz(user));
-        JButton highScoreButton = createButton("View High Scores", frame, () -> new LeaderboardUI(user));
-        JButton playerDetailsButton = createButton("View Player Details", frame, null);
-        
-        playerDetailsButton.addActionListener(e -> {
-        	
-        	new PlayerDetailsUI(user);
-            
-        });
-        JButton logoutButton = createButton("Logout", frame, () -> System.exit(0));
-        logoutButton.setForeground(Color.RED);
-        gbc.gridy = 0;
-        mainPanel.add(titleLabel, gbc);
-        gbc.gridy = 1;
-        mainPanel.add(playButton, gbc);
-        gbc.gridy = 2;
-        mainPanel.add(highScoreButton, gbc);
-        gbc.gridy = 3;
-        mainPanel.add(playerDetailsButton, gbc);
-        gbc.gridy = 4;
-        mainPanel.add(logoutButton, gbc);
-        
-        frame.add(mainPanel, BorderLayout.CENTER);
-        frame.setVisible(true);
-    }
-    
-    private JButton createButton(String text, JFrame frame, Runnable action) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 20));
-        button.setBackground(new Color(41, 128, 185));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(300, 80));
-        button.setOpaque(true);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        button.addActionListener(e -> {
-            frame.dispose();
-            try {
-				
-            	action.run();
-			} catch (Exception e2) {
-				System.out.println(e2);
-			}
-        });
-        return button;
+    	Map<String, Runnable> userActions = new LinkedHashMap<>();
+        userActions.put("Play Quiz", () -> new PlayQuiz(user));
+        userActions.put("View High Scores", () -> new LeaderboardUI(user));
+        userActions.put("View Player Details", () -> new ViewStats(user));
+        userActions.put("Logout", () -> System.exit(0));
+
+        new DashBoardUI("Welcome " + user.getName(), userActions);
     }
 }
-
-
-
-
-
 
 class LeaderboardUI {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/quizApp";
@@ -94,23 +39,27 @@ class LeaderboardUI {
         frame.setLayout(new BorderLayout());
 
         // Header Panel
-        JPanel headerPanel = new JPanel();
+        JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(52, 73, 94));
 
         JLabel label = new JLabel("High Scores Page", SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setForeground(Color.WHITE);
 
+        // Load and scale the back button image
         ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png")
                 .getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         JButton backButton = new JButton(backIcon);
+        backButton.setBorderPainted(false);
+        backButton.setContentAreaFilled(false);
+        backButton.setFocusPainted(false);
         backButton.addActionListener(e -> {
             frame.dispose();
             new UserPannelUI(user);
         });
 
-        headerPanel.add(label);
-        frame.add(backButton, BorderLayout.WEST);
+        headerPanel.add(backButton, BorderLayout.WEST);
+        headerPanel.add(label, BorderLayout.CENTER);
         frame.add(headerPanel, BorderLayout.NORTH);
 
         // Main Content Panel
@@ -118,22 +67,25 @@ class LeaderboardUI {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Create and add difficulty level panels
-        mainPanel.add(createDifficultyPanel("Easy", fetchLeaderboardData("Easy")));
-        mainPanel.add(createDifficultyPanel("Medium", fetchLeaderboardData("Medium")));
-        mainPanel.add(createDifficultyPanel("Hard", fetchLeaderboardData("Hard")));
-
+        mainPanel.add(createDifficultyPanel("Beginner", fetchLeaderboardData("BEGINNER")));
+        mainPanel.add(createDifficultyPanel("Intermediate", fetchLeaderboardData("INTERMEDIATE")));
+        mainPanel.add(createDifficultyPanel("Advance", fetchLeaderboardData("ADVANCE")));
+        
         frame.add(mainPanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
 
     private JPanel createDifficultyPanel(String difficulty, List<LeaderboardEntry> entries) {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(difficulty + " Level Rankings"));
+        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK),
+                difficulty + " Level Rankings", TitledBorder.CENTER, TitledBorder.TOP));
 
         // Create table model
         String[] columnNames = {"Rank", "Player", "Score"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
-            @Override
+            private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -142,11 +94,7 @@ class LeaderboardUI {
         // Add data to table
         for (int i = 0; i < entries.size(); i++) {
             LeaderboardEntry entry = entries.get(i);
-            model.addRow(new Object[]{
-                i + 1,
-                entry.username,
-                entry.score
-            });
+            model.addRow(new Object[]{i + 1, entry.username, entry.score});
         }
 
         // Create and configure table
@@ -156,7 +104,6 @@ class LeaderboardUI {
         table.getTableHeader().setBackground(new Color(52, 73, 94));
         table.getTableHeader().setForeground(Color.WHITE);
 
-        // Add table to scrollpane
         JScrollPane scrollPane = new JScrollPane(table);
         panel.add(scrollPane, BorderLayout.CENTER);
 
@@ -165,7 +112,7 @@ class LeaderboardUI {
 
     private List<LeaderboardEntry> fetchLeaderboardData(String difficulty) {
         List<LeaderboardEntry> entries = new ArrayList<>();
-        String level  = difficulty.toUpperCase();
+        String level = difficulty.toUpperCase();
         String query = "SELECT email, overallScore FROM users WHERE level = ? ORDER BY overallScore DESC";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -176,13 +123,13 @@ class LeaderboardUI {
 
             while (rs.next()) {
                 entries.add(new LeaderboardEntry(
-                    rs.getString("username"),
+                    rs.getString("email"),
                     rs.getInt("overallScore")
                 ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, 
+            JOptionPane.showMessageDialog(null,
                 "Error fetching leaderboard data: " + e.getMessage(),
                 "Database Error",
                 JOptionPane.ERROR_MESSAGE);

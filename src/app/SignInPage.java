@@ -68,6 +68,10 @@ public class SignInPage extends JFrame {
                     JOptionPane.showMessageDialog(SignInPage.this, "Fields cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                if(!EmailValidiator.isValidEmail(email)) {
+                	JOptionPane.showMessageDialog(SignInPage.this, "Please Enter a Valid email", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 if (password.length() < 6) {
                     JOptionPane.showMessageDialog(SignInPage.this, "Password must be at least 6 characters!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -81,7 +85,7 @@ public class SignInPage extends JFrame {
                 		new UserPannelUI(response.user); 
                 	}else {
                 		dispose();
-                		new AddQuestionPage(response.user); 
+                		new AdminPanelUI(response.user); 
                 		
                 	}
                 }else {
