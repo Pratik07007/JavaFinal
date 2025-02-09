@@ -6,6 +6,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -20,7 +22,7 @@ public class UserPannelUI {
     	Map<String, Runnable> userActions = new LinkedHashMap<>();
         userActions.put("Play Quiz", () -> new PlayQuiz(user));
         userActions.put("View High Scores", () -> new LeaderboardUI(user));
-        userActions.put("View Player Details", () -> new ViewStats(user));
+        userActions.put("View Player Details", () -> new PlayerDetailsUI(user));
         userActions.put("Logout", () -> System.exit(0));
 
         new DashBoardUI("Welcome " + user.getName(), userActions);
@@ -149,24 +151,24 @@ class LeaderboardUI {
     }
 }
 
- class PlayerDetailsUI {
-    private JLabel nameLabel, emailLabel, levelLabel, scoreLabel,fullDetailsLabel;
+
+class PlayerDetailsUI {
+    private JLabel nameLabel, emailLabel, levelLabel, scoreLabel, fullDetailsLabel;
     private JPanel detailsPanel;
 
     public PlayerDetailsUI(Compitetor user) {
         JFrame frame = new JFrame("Player Details");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 400);
         frame.setLayout(new BorderLayout());
 
         JPanel inputPanel = new JPanel();
         inputPanel.setBackground(new Color(52, 73, 94));
         inputPanel.setLayout(new FlowLayout());
-        
+
         JTextField searchField = new JTextField(10);
         JButton seeResultButton = new JButton("See Result");
         seeResultButton.setFont(new Font("Arial", Font.BOLD, 14));
-        
+
         inputPanel.add(new JLabel("Enter Player ID: "));
         inputPanel.add(searchField);
         inputPanel.add(seeResultButton);
@@ -178,42 +180,35 @@ class LeaderboardUI {
 
         nameLabel = new JLabel("Name: " + user.getName());
         emailLabel = new JLabel("Email: " + user.getEmail());
-        
+
         levelLabel = new JLabel("Level: " + user.getLevel());
-        scoreLabel = new JLabel("Overall Score: " + user.getOverallScore()+"/25");
+        scoreLabel = new JLabel("Overall Score: " + user.getOverallScore() + "/25");
         fullDetailsLabel = new JLabel(user.getFullDetails());
-               
 
         Font labelFont = new Font("Arial", Font.BOLD, 18);
         Font descriptionFont = new Font("Arial", Font.ITALIC, 20);
-        
+
         nameLabel.setFont(labelFont);
         emailLabel.setFont(labelFont);
-        
-        
+
         levelLabel.setFont(labelFont);
         scoreLabel.setFont(labelFont);
         fullDetailsLabel.setFont(descriptionFont);
-        
-//        scoreLabel.setFont(labelFont);
-        
+
         nameLabel.setForeground(Color.WHITE);
         emailLabel.setForeground(Color.WHITE);
         fullDetailsLabel.setForeground(Color.WHITE);
-        
+
         levelLabel.setForeground(Color.WHITE);
         scoreLabel.setForeground(Color.WHITE);
         fullDetailsLabel.setForeground(Color.WHITE);
-        
 
         detailsPanel.add(nameLabel);
         detailsPanel.add(emailLabel);
-        
+
         detailsPanel.add(levelLabel);
         detailsPanel.add(scoreLabel);
         detailsPanel.add(fullDetailsLabel);
-    
-        
 
         seeResultButton.addActionListener(new ActionListener() {
             @Override
@@ -227,7 +222,7 @@ class LeaderboardUI {
                     nameLabel.setText("Name: " + newUser.getName());
                     emailLabel.setText("Email: " + newUser.getEmail());
                     levelLabel.setText("Level: " + newUser.getLevel());
-                    scoreLabel.setText("Overall Score: " + newUser.getOverallScore()+"/25");
+                    scoreLabel.setText("Overall Score: " + newUser.getOverallScore() + "/25");
                     fullDetailsLabel.setText(newUser.getFullDetails());
                     detailsPanel.revalidate();
                     detailsPanel.repaint();
@@ -237,8 +232,17 @@ class LeaderboardUI {
 
         frame.add(inputPanel, BorderLayout.NORTH);
         frame.add(detailsPanel, BorderLayout.CENTER);
+        
+        // Add Window Listener to load UserPannelUI when the window is closed
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                frame.dispose(); // Dispose the current frame
+                new UserPannelUI(user); // Re-open the UserPannelUI
+            }
+        });
+
         frame.setVisible(true);
     }
-
 
 }

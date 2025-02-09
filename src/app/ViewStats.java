@@ -11,7 +11,7 @@ public class ViewStats extends JFrame {
     private DefaultTableModel tableModel;
     private JLabel totalPlayersLabel, highestMarkLabel, lowestMarkLabel, meanMarkLabel, totalScoresLabel;
 
-    public ViewStats(Compitetor admin) {
+    public ViewStats(Compitetor user) {
         setTitle("Competitor Stats");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -20,7 +20,7 @@ public class ViewStats extends JFrame {
         topPanel.setBackground(new Color(44, 62, 80));
         add(topPanel, BorderLayout.NORTH);
 
-        JButton backButton = createBackButton(admin);
+        JButton backButton = createBackButton(user);
         topPanel.add(backButton, BorderLayout.WEST);
 
         JPanel searchPanel = new JPanel(new FlowLayout());
@@ -69,14 +69,10 @@ public class ViewStats extends JFrame {
         JButton backButton = new JButton("← Back");
         styleButton(backButton, new Color(231, 76, 60), Color.BLACK);
         backButton.addActionListener(e -> {
-        	if(user.getRole()=="ADMIN") {
-        		
+        	
         		dispose();
         		new AdminPanelUI(user);
-        	}else {
-        		dispose();
-        		new UserPannelUI(user);
-        	}
+        	
         });
         return backButton;
     }
