@@ -6,18 +6,29 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * AddQuestionPage is a JFrame that allows an admin to add a new question to the database.
+ * It includes fields for the question, answer, options, and difficulty level, as well as buttons for adding the question and logging out.
+ */
 public class AddQuestionPage extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
+    // Declare form fields
     private JTextField textFieldQuestion, textFieldAnswer, textFieldOption1, textFieldOption2, textFieldOption3, textFieldOption4;
     private JComboBox<String> comboBoxLevel;
 
+    /**
+     * Constructor for the AddQuestionPage.
+     * Initializes the UI components and layout for the page where admins can add new questions.
+     * 
+     * @param admin The current administrator object, used to display the admin's name.
+     */
     public AddQuestionPage(Compitetor admin) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Create content pane
+        // Create content pane with layout and background color
         JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
         contentPane.setBackground(new Color(44, 62, 80));
@@ -35,6 +46,7 @@ public class AddQuestionPage extends JFrame {
         centerPanel.setBackground(new Color(44, 62, 80));
         contentPane.add(centerPanel, BorderLayout.CENTER);
 
+        // GridBagConstraints for positioning form fields
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
@@ -51,6 +63,7 @@ public class AddQuestionPage extends JFrame {
 
         gbc.gridwidth = 1; // Reset for form fields
 
+        // Add form fields to the panel
         addFormField(centerPanel, gbc, "Question:", textFieldQuestion = new JTextField(30));
         addFormField(centerPanel, gbc, "Level:", comboBoxLevel = new JComboBox<>(new String[]{"Beginner", "Intermediate", "Advanced"}));
         addFormField(centerPanel, gbc, "Answer:", textFieldAnswer = new JTextField(30));
@@ -88,7 +101,12 @@ public class AddQuestionPage extends JFrame {
         setVisible(true);
     }
 
-    // Create a Back Button
+    /**
+     * Creates a Back button to return to the Admin Panel.
+     * 
+     * @param admin The current administrator object.
+     * @return A JButton configured with an action listener for going back to the admin panel.
+     */
     private JButton createBackButton(Compitetor admin) {
         ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage()
                 .getScaledInstance(30, 30, Image.SCALE_SMOOTH));
@@ -103,7 +121,14 @@ public class AddQuestionPage extends JFrame {
         return backButton;
     }
 
-    // Helper method to add form fields
+    /**
+     * Helper method to add form fields (labels and text fields) to the given panel.
+     * 
+     * @param panel The JPanel where the form fields will be added.
+     * @param gbc GridBagConstraints to manage component layout.
+     * @param labelText The text to display for the label.
+     * @param field The JComponent (JTextField or JComboBox) to add to the form.
+     */
     private void addFormField(JPanel panel, GridBagConstraints gbc, String labelText, JComponent field) {
         gbc.gridx = 0;
         gbc.gridy++;
@@ -120,7 +145,13 @@ public class AddQuestionPage extends JFrame {
         panel.add(field, gbc);
     }
 
-    // Helper method to style buttons
+    /**
+     * Helper method to style buttons with background and foreground colors.
+     * 
+     * @param button The JButton to style.
+     * @param bgColor The background color of the button.
+     * @param fgColor The foreground color (text color) of the button.
+     */
     private void styleButton(JButton button, Color bgColor, Color fgColor) {
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setBackground(bgColor);
@@ -128,8 +159,16 @@ public class AddQuestionPage extends JFrame {
         button.setFocusPainted(false);
     }
 
-    // Action for the "Add Question" button
+    /**
+     * ActionListener for the "Add Question" button to add a new question to the database.
+     */
     private class AddQuestionAction implements ActionListener {
+        /**
+         * Handles the event of clicking the "Add Question" button.
+         * Retrieves form data, validates fields, and calls JDBC to add the question to the database.
+         * 
+         * @param e The ActionEvent triggered by clicking the button.
+         */
         public void actionPerformed(ActionEvent e) {
             String question = textFieldQuestion.getText().trim();
             String answer = textFieldAnswer.getText().trim();
@@ -139,13 +178,16 @@ public class AddQuestionPage extends JFrame {
             String option4 = textFieldOption4.getText().trim();
             String level = ((String) comboBoxLevel.getSelectedItem()).toUpperCase();
 
+            // Validate that all fields are filled
             if (question.isEmpty() || answer.isEmpty() || option1.isEmpty() || option2.isEmpty() || option3.isEmpty() || option4.isEmpty()) {
                 JOptionPane.showMessageDialog(AddQuestionPage.this, "All fields must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
+            // Call JDBC method to add the question
             ReturnMessage response = JDBC.addQuestion(question, level, answer, option1, option2, option3, option4);
             if (response.success) {
+                // Show success message and reset fields
                 JOptionPane.showMessageDialog(AddQuestionPage.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
                 textFieldQuestion.setText("");
                 textFieldAnswer.setText("");
@@ -155,6 +197,7 @@ public class AddQuestionPage extends JFrame {
                 textFieldOption4.setText("");
                 comboBoxLevel.setSelectedIndex(0);
             } else {
+                // Show error message
                 JOptionPane.showMessageDialog(AddQuestionPage.this, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
             }
         }

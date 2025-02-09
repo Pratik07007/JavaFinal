@@ -1,18 +1,30 @@
 package app;
 
 public class Questions {
-    private int id;
-    private String text;
-    private String opt1;
-    private String opt2;
-    private String opt3;
-    private String opt4;
-    private String level;
-    private String answer;
+    private final int id;
+    private final String questionText;
+    private final String opt1;
+    private final String opt2;
+    private final String opt3;
+    private final String opt4;
+    private final String level;
+    private final String answer;
 
-    public Questions(int id, String text, String opt1, String opt2, String opt3, String opt4, String level, String answer) {
+    /**
+     * Constructor to initialize a new question.
+     * 
+     * @param id the unique identifier for the question
+     * @param questionText the text of the question
+     * @param opt1 the first option for the question
+     * @param opt2 the second option for the question
+     * @param opt3 the third option for the question
+     * @param opt4 the fourth option for the question
+     * @param level the difficulty level of the question
+     * @param answer the correct answer to the question
+     */
+    public Questions(int id, String questionText, String opt1, String opt2, String opt3, String opt4, String level, String answer) {
         this.id = id;
-        this.text = text;
+        this.questionText = questionText;
         this.opt1 = opt1;
         this.opt2 = opt2;
         this.opt3 = opt3;
@@ -25,8 +37,8 @@ public class Questions {
         return id;
     }
 
-    public String getText() {
-        return text;
+    public String getQuestionText() {
+        return questionText;
     }
 
     public String getOpt1() {
@@ -53,32 +65,26 @@ public class Questions {
         return answer;
     }
 
-    public void setOpt1(String opt1) {
-        this.opt1 = opt1;
-    }
-
-    public void setOpt2(String opt2) {
-        this.opt2 = opt2;
-    }
-
-    public void setOpt3(String opt3) {
-        this.opt3 = opt3;
-    }
-
-    public void setOpt4(String opt4) {
-        this.opt4 = opt4;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
     public String[] getOptions() {
         return new String[] { opt1, opt2, opt3, opt4 };
     }
 
+    /**
+     * Provides a string representation of the question, useful for debugging.
+     * 
+     * @return a string representing the question and its options
+     */
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", questionText='" + questionText + '\'' +
+                ", opt1='" + opt1 + '\'' +
+                ", opt2='" + opt2 + '\'' +
+                ", opt3='" + opt3 + '\'' +
+                ", opt4='" + opt4 + '\'' +
+                ", level='" + level + '\'' +
+                ", answer='" + answer + '\'' +
+                '}';
+    }
 }

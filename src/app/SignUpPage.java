@@ -2,10 +2,18 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+
+
+/**
+ * The SignUpPage class represents the sign-up page for user registration.
+ * It allows users to enter their name, email, password, and select a difficulty level.
+ */
 public class SignUpPage extends JFrame {
+    /**
+     * Constructs the SignUpPage UI.
+     * Sets up the layout, components, and event listeners.
+     */
     public SignUpPage() {
         setTitle("Sign Up");
         setSize(500, 400);
@@ -23,7 +31,8 @@ public class SignUpPage extends JFrame {
         gbc.gridx = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+        ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png")
+                .getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         JButton backButton = new JButton(backIcon);
         backButton.setContentAreaFilled(false);
         backButton.setBorderPainted(false);
@@ -64,6 +73,10 @@ public class SignUpPage extends JFrame {
         JButton signUpButton = new JButton("Sign Up");
         styleButton(signUpButton, new Color(41, 128, 185));
 
+        /**
+         * Action listener for the sign-up button.
+         * Validates user input and registers the user.
+         */
         signUpButton.addActionListener(e -> {
             String name = nameField.getText();
             String email = emailField.getText();
@@ -74,8 +87,8 @@ public class SignUpPage extends JFrame {
                 JOptionPane.showMessageDialog(SignUpPage.this, "Fields cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if(!EmailValidiator.isValidEmail(email)) {
-            	JOptionPane.showMessageDialog(SignUpPage.this, "Please Enter a Valid email", "Error", JOptionPane.ERROR_MESSAGE);
+            if (!EmailValidiator.isValidEmail(email)) {
+                JOptionPane.showMessageDialog(SignUpPage.this, "Please Enter a Valid email", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (password.length() < 6) {
@@ -109,6 +122,11 @@ public class SignUpPage extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Styles a button with a specific background color.
+     * @param button the button to style
+     * @param bgColor the background color
+     */
     private void styleButton(JButton button, Color bgColor) {
         button.setFont(new Font("Arial", Font.BOLD, 18));
         button.setBackground(bgColor);
@@ -119,11 +137,19 @@ public class SignUpPage extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 
+    /**
+     * Styles a label with font and color.
+     * @param label the label to style
+     */
     private void styleLabel(JLabel label) {
         label.setFont(new Font("Arial", Font.BOLD, 20));
         label.setForeground(Color.WHITE);
     }
 
+    /**
+     * Styles a text field with font and size.
+     * @param field the text field to style
+     */
     private void styleTextField(JTextField field) {
         field.setFont(new Font("Arial", Font.PLAIN, 18));
         field.setPreferredSize(new Dimension(250, 40));

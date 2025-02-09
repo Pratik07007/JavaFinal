@@ -5,7 +5,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The SuperAdmin class represents a UI for the super admin to add new admins.
+ * It allows input of name, email, and password with validation.
+ */
 public class SuperAdmin extends JFrame {
+    /**
+     * Constructs the SuperAdmin UI.
+     * Sets up the layout, components, and event listeners.
+     */
     public SuperAdmin() {
         setTitle("Super Admin - Add Admin");
         setSize(500, 400);
@@ -29,7 +37,6 @@ public class SuperAdmin extends JFrame {
         JTextField nameFeild = new JTextField(20);
         styleTextField(nameFeild);
 
-
         JLabel emailLabel = new JLabel("Email:");
         styleLabel(emailLabel);
 
@@ -45,6 +52,10 @@ public class SuperAdmin extends JFrame {
         JButton submitButton = new JButton("Add Admin");
         styleButton(submitButton, new Color(231, 76, 60)); // Red color for admin action
 
+        /**
+         * Action listener for the submit button.
+         * Validates input and attempts to add an admin.
+         */
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String email = emailField.getText();
@@ -55,30 +66,26 @@ public class SuperAdmin extends JFrame {
                     return;
                 }
                 
-                
-
                 if (password.length() < 6) {
                     JOptionPane.showMessageDialog(SuperAdmin.this, "Password must be at least 6 characters!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
                 if(!EmailValidiator.isValidEmail(email)) {
-                	JOptionPane.showMessageDialog(SuperAdmin.this, "Please Enter a Valid email", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(SuperAdmin.this, "Please Enter a Valid email", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 ReturnMessage response =  JDBC.addAdmin(email,password,name);
                 if(response.success) {
-                	JOptionPane.showMessageDialog(SuperAdmin.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
-                	dispose();
-                	new SignInPage();
-                }else {
-                	JOptionPane.showMessageDialog(SuperAdmin.this, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(SuperAdmin.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
+                    new SignInPage();
+                } else {
+                    JOptionPane.showMessageDialog(SuperAdmin.this, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                
             }
         });
         
-
         gbc.gridy = 0;
         mainPanel.add(nameLabel, gbc);
 
@@ -90,7 +97,6 @@ public class SuperAdmin extends JFrame {
 
         gbc.gridy = 3;
         mainPanel.add(emailField, gbc);
-
 
         gbc.gridy = 4;
         mainPanel.add(passwordLabel, gbc);
@@ -105,6 +111,11 @@ public class SuperAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Styles a button with a specific background color.
+     * @param button the button to style
+     * @param bgColor the background color
+     */
     private void styleButton(JButton button, Color bgColor) {
         button.setFont(new Font("Arial", Font.BOLD, 18));
         button.setBackground(bgColor);
@@ -115,16 +126,28 @@ public class SuperAdmin extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 
+    /**
+     * Styles a label with font and color.
+     * @param label the label to style
+     */
     private void styleLabel(JLabel label) {
         label.setFont(new Font("Arial", Font.BOLD, 20));
         label.setForeground(Color.WHITE);
     }
 
+    /**
+     * Styles a text field with font and size.
+     * @param field the text field to style
+     */
     private void styleTextField(JTextField field) {
         field.setFont(new Font("Arial", Font.PLAIN, 18));
         field.setPreferredSize(new Dimension(250, 40));
     }
 
+    /**
+     * Main method to launch the SuperAdmin UI.
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         new SuperAdmin();
     }

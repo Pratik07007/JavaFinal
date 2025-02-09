@@ -5,7 +5,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The SignInPage class represents the sign-in window for users.
+ * It allows users to enter their email and password for authentication.
+ */
 public class SignInPage extends JFrame {
+    
+    /**
+     * Constructs the SignInPage frame and initializes the UI components.
+     */
     public SignInPage() {
         setTitle("Sign In");
         setSize(500, 400);
@@ -24,13 +32,17 @@ public class SignInPage extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Back Button with Icon
-        ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+        ImageIcon backIcon = new ImageIcon(new ImageIcon("/Users/pratikdhimal/Desktop/Remove Background Preview.png")
+                .getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         JButton backButton = new JButton(backIcon);
         backButton.setContentAreaFilled(false);
         backButton.setBorderPainted(false);
         backButton.setFocusPainted(false);
         backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        /**
+         * ActionListener for the back button to navigate to the Home screen.
+         */
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
@@ -57,19 +69,21 @@ public class SignInPage extends JFrame {
         JButton loginButton = new JButton("Login");
         styleButton(loginButton, new Color(46, 204, 113));
         
-
+        /**
+         * ActionListener for the login button to validate user credentials.
+         */
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	
                 String email = emailField.getText();
                 String password = new String(passwordField.getPassword());
                 
+                // Validate input fields
                 if (email.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(SignInPage.this, "Fields cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if(!EmailValidiator.isValidEmail(email)) {
-                	JOptionPane.showMessageDialog(SignInPage.this, "Please Enter a Valid email", "Error", JOptionPane.ERROR_MESSAGE);
+                if (!EmailValidiator.isValidEmail(email)) {
+                    JOptionPane.showMessageDialog(SignInPage.this, "Please Enter a Valid email", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -77,23 +91,23 @@ public class SignInPage extends JFrame {
                     JOptionPane.showMessageDialog(SignInPage.this, "Password must be at least 6 characters!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                ReturnMessage response =  JDBC.checkLogin(email,password);
-                if(response.success) {
-                	JOptionPane.showMessageDialog(SignInPage.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
-                	if(response.user.getRole().equals("USER")) {
-                		dispose();
-                		new UserPannelUI(response.user); 
-                	}else {
-                		dispose();
-                		new AdminPanelUI(response.user); 
-                		
-                	}
-                }else {
-                	JOptionPane.showMessageDialog(SignInPage.this, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
-                	emailField.setText("");
-                	passwordField.setText("");
-                }                
                 
+                // Authenticate user
+                ReturnMessage response = JDBC.checkLogin(email, password);
+                if (response.success) {
+                    JOptionPane.showMessageDialog(SignInPage.this, response.msg, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    if (response.user.getRole().equals("USER")) {
+                        dispose();
+                        new UserPannelUI(response.user);
+                    } else {
+                        dispose();
+                        new AdminPanelUI(response.user);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(SignInPage.this, response.msg, "Error", JOptionPane.ERROR_MESSAGE);
+                    emailField.setText("");
+                    passwordField.setText("");
+                }                
             }
         });
 
@@ -118,6 +132,11 @@ public class SignInPage extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Styles a JButton with custom font, colors, and padding.
+     * @param button The JButton to style.
+     * @param bgColor The background color of the button.
+     */
     private void styleButton(JButton button, Color bgColor) {
         button.setFont(new Font("Arial", Font.BOLD, 18));
         button.setBackground(bgColor);
@@ -128,15 +147,21 @@ public class SignInPage extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 
+    /**
+     * Styles a JLabel with a custom font and color.
+     * @param label The JLabel to style.
+     */
     private void styleLabel(JLabel label) {
         label.setFont(new Font("Arial", Font.BOLD, 20));
         label.setForeground(Color.WHITE);
     }
 
+    /**
+     * Styles a JTextField with a custom font and size.
+     * @param field The JTextField to style.
+     */
     private void styleTextField(JTextField field) {
         field.setFont(new Font("Arial", Font.PLAIN, 18));
         field.setPreferredSize(new Dimension(250, 40));
     }
-
-    
 }

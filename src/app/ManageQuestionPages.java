@@ -3,23 +3,33 @@ package app;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * This class represents the Manage Questions page for the admin to manage and update quiz questions.
+ * It allows the admin to view, update, and delete questions from the database.
+ */
 public class ManageQuestionPages {
+    
+    // Colors used for UI elements
     private static final Color DARK_BACKGROUND = new Color(44, 62, 80);
     private static final Color PANEL_BACKGROUND = new Color(44, 62, 80);
     private static final Color TEXT_COLOR = new Color(220, 220, 230);
     
-    private static final Color UPDATE_COLOR = new Color(80, 250, 123);
-    private static final Color DELETE_COLOR = new Color(255, 85, 85);
+    private static final Color UPDATE_COLOR = new Color(80, 250, 123); // Update button color
+    private static final Color DELETE_COLOR = new Color(255, 85, 85); // Delete button color
 
     private JFrame frame;
     private JPanel contentPanel;
     private ArrayList<JPanel> questionPanels;
 
+    /**
+     * Constructor to create and display the Manage Questions page.
+     *
+     * @param admin The admin user who is managing the questions.
+     */
     public ManageQuestionPages(Compitetor admin) {
+        // Set up the JFrame for the manage questions screen
         frame = new JFrame("Manage Questions");
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,43 +50,55 @@ public class ManageQuestionPages {
         backButton.setBackground(DARK_BACKGROUND);
         backButton.addActionListener(e -> {
             frame.dispose();
-            new AdminPanelUI(admin);
+            new AdminPanelUI(admin); // Navigate back to Admin Panel
         });
         
+        // Top panel for the back button
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.setBackground(DARK_BACKGROUND);
         topPanel.add(backButton);
         contentPanel.add(topPanel);
 
+        // Title label for the screen
         JLabel lblTitle = new JLabel("Manage Questions", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
         lblTitle.setForeground(TEXT_COLOR);
         lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         contentPanel.add(lblTitle);
 
+        // Fetch all questions from the database and render them
         ArrayList<Questions> questions = JDBC.fetchAllQuestions();
         for (Questions question : questions) {
-            renderQuestion(question, admin);
+            renderQuestion(question, admin); // Render each question
         }
 
+        // Scroll pane to make content scrollable
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.getViewport().setBackground(DARK_BACKGROUND);
         scrollPane.setBorder(null);
         frame.add(scrollPane);
 
-        frame.setVisible(true);
+        frame.setVisible(true); // Make the frame visible
     }
 
+    /**
+     * Renders each question with options for Update and Delete.
+     *
+     * @param question The question to be rendered.
+     * @param admin The admin user who is managing the questions.
+     */
     private void renderQuestion(Questions question, Compitetor admin) {
         JPanel questionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         questionPanel.setBackground(PANEL_BACKGROUND);
         questionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel lblQuestion = new JLabel(question.getText());
+        // Display the question text
+        JLabel lblQuestion = new JLabel(question.getQuestionText());
         lblQuestion.setFont(new Font("Arial", Font.PLAIN, 16));
         lblQuestion.setForeground(TEXT_COLOR);
         questionPanel.add(lblQuestion);
         
+        // Display difficulty level with color-coded background
         JLabel difficulty = new JLabel(question.getLevel());
         difficulty.setFont(new Font("Arial", Font.PLAIN, 16));
 
@@ -101,13 +123,16 @@ public class ManageQuestionPages {
         difficulty.setOpaque(true);
         questionPanel.add(difficulty);
 
+        // Button panel for Update and Delete actions
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setBackground(PANEL_BACKGROUND);
 
+        // Update button
         JButton btnUpdate = createStyledButton("Update", UPDATE_COLOR);
-        btnUpdate.addActionListener(e -> new UpdateQuestionPage(question, admin));
+        btnUpdate.addActionListener(e -> new UpdateQuestionPage(question, admin)); // Navigate to Update Question page
         buttonPanel.add(btnUpdate);
 
+        // Delete button with confirmation
         JButton btnDelete = createStyledButton("Delete", DELETE_COLOR);
         btnDelete.addActionListener(e -> {
             int confirmDelete = JOptionPane.showConfirmDialog(
@@ -118,7 +143,7 @@ public class ManageQuestionPages {
             );
             
             if (confirmDelete == JOptionPane.YES_OPTION) {
-                Boolean response = JDBC.deleteQuestion(question.getId());
+                Boolean response = JDBC.deleteQuestion(question.getId()); // Delete question from DB
                 if (response) {
                     JOptionPane.showMessageDialog(
                         null, 
@@ -129,7 +154,7 @@ public class ManageQuestionPages {
                     contentPanel.remove(questionPanel);
                     questionPanels.remove(questionPanel);
                     contentPanel.revalidate();
-                    contentPanel.repaint();
+                    contentPanel.repaint(); // Refresh the UI after deletion
                 } else {
                     JOptionPane.showMessageDialog(
                         null, 
@@ -144,9 +169,16 @@ public class ManageQuestionPages {
 
         questionPanel.add(buttonPanel);
         questionPanels.add(questionPanel);
-        contentPanel.add(questionPanel);
+        contentPanel.add(questionPanel); // Add the question panel to content
     }
 
+    /**
+     * Helper method to create a styled button with a specified background color.
+     *
+     * @param text The text displayed on the button.
+     * @param bgColor The background color of the button.
+     * @return The styled button.
+     */
     private JButton createStyledButton(String text, Color bgColor) {
         JButton button = new JButton(text);
         button.setBackground(bgColor);

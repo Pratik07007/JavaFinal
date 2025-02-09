@@ -5,12 +5,21 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 
+/**
+ * The ViewStats class represents a statistics panel for competitors.
+ * It provides functionalities to search for users, filter by difficulty level, and display statistics.
+ */
 public class ViewStats extends JFrame {
     private JTextField searchField;
+    private JComboBox<String> levelFilter;
     private JTable table;
     private DefaultTableModel tableModel;
     private JLabel totalPlayersLabel, highestMarkLabel, lowestMarkLabel, meanMarkLabel, totalScoresLabel;
 
+    /**
+     * Constructs the ViewStats UI.
+     * @param user The competitor user for whom the statistics panel is displayed.
+     */
     public ViewStats(Compitetor user) {
         setTitle("Competitor Stats");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -27,18 +36,23 @@ public class ViewStats extends JFrame {
         searchPanel.setBackground(new Color(44, 62, 80));
 
         searchField = new JTextField(20);
-        JButton searchButton = new JButton("Search by Email");
+        JButton searchButton = new JButton("Search");
         styleButton(searchButton, new Color(52, 152, 219), Color.BLACK);
         searchButton.addActionListener(e -> searchUser());
 
+        levelFilter = new JComboBox<>(new String[]{"ALL", "BEGINNER", "INTERMEDIATE", "ADVANCED"});
+        levelFilter.addActionListener(e -> searchUser());
+
         searchPanel.add(new JLabel("Email: "));
         searchPanel.add(searchField);
+        searchPanel.add(new JLabel("Level: "));
+        searchPanel.add(levelFilter);
         searchPanel.add(searchButton);
         topPanel.add(searchPanel, BorderLayout.EAST);
 
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
-        loadTableData(null);
+        loadTableData(null, "ALL");
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
@@ -65,18 +79,27 @@ public class ViewStats extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Creates a back button to return to the Admin Panel.
+     * @param user The competitor user.
+     * @return The configured back button.
+     */
     private JButton createBackButton(Compitetor user) {
-        JButton backButton = new JButton("← Back");
+        JButton backButton = new JButton("\u2190 Back");
         styleButton(backButton, new Color(231, 76, 60), Color.BLACK);
         backButton.addActionListener(e -> {
-        	
-        		dispose();
-        		new AdminPanelUI(user);
-        	
+            dispose();
+            new AdminPanelUI(user);
         });
         return backButton;
     }
 
+    /**
+     * Styles a button with specified colors.
+     * @param button The button to style.
+     * @param bgColor The background color.
+     * @param fgColor The foreground color.
+     */
     private void styleButton(JButton button, Color bgColor, Color fgColor) {
         button.setFont(new Font("Arial", Font.BOLD, 14));
         button.setBackground(bgColor);
@@ -84,16 +107,25 @@ public class ViewStats extends JFrame {
         button.setFocusPainted(false);
     }
 
-    private void loadTableData(String email) {
+    /**
+     * Loads the table data based on email and level filters.
+     * @param email The email filter.
+     * @param level The level filter.
+     */
+    private void loadTableData(String email, String level) {
         String url = "jdbc:mysql://localhost:3306/quizApp";
         String user = "root";
         String password = "admin@12345";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            String sql = "SELECT id, name, email, level, score1, score2, score3, score4, score5, overallScore FROM users WHERE role = 'USER'";
-            if (email != null) sql += " AND email = ?";
+            String sql = "SELECT id, name, email, level, score1, score2, score3, score4, score5 FROM users WHERE role = 'USER'";
+            if (email != null && !email.isEmpty()) sql += " AND email = ?";
+            if (!"ALL".equals(level)) sql += " AND level = ?";
+
             PreparedStatement stmt = conn.prepareStatement(sql);
-            if (email != null) stmt.setString(1, email);
+            int paramIndex = 1;
+            if (email != null && !email.isEmpty()) stmt.setString(paramIndex++, email);
+            if (!"ALL".equals(level)) stmt.setString(paramIndex, level);
 
             ResultSet rs = stmt.executeQuery();
             tableModel.setRowCount(0);
@@ -105,7 +137,7 @@ public class ViewStats extends JFrame {
                 int score3 = rs.getInt("score3");
                 int score4 = rs.getInt("score4");
                 int score5 = rs.getInt("score5");
-                int calculatedOverallScore = score1 + score2 + score3 + score4 + score5;
+                int overallScore = score1 + score2 + score3 + score4 + score5;
 
                 tableModel.addRow(new Object[]{
                         rs.getInt("id"),
@@ -117,35 +149,26 @@ public class ViewStats extends JFrame {
                         score3,
                         score4,
                         score5,
-                        calculatedOverallScore
+                        overallScore
                 });
             }
-
-            // Set custom column widths
-            table.getColumnModel().getColumn(1).setPreferredWidth(200); // Name column width
-            table.getColumnModel().getColumn(2).setPreferredWidth(300); // Email column width
-            table.getColumnModel().getColumn(3).setPreferredWidth(100); // Level column width
-            table.getColumnModel().getColumn(4).setPreferredWidth(80); // Score1 column width
-            table.getColumnModel().getColumn(5).setPreferredWidth(80); // Score2 column width
-            table.getColumnModel().getColumn(6).setPreferredWidth(80); // Score3 column width
-            table.getColumnModel().getColumn(7).setPreferredWidth(80); // Score4 column width
-            table.getColumnModel().getColumn(8).setPreferredWidth(80); // Score5 column width
-            table.getColumnModel().getColumn(9).setPreferredWidth(120); // Overall Score column width
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Database error!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-
+    /**
+     * Searches for a user based on input email and level filter.
+     */
     private void searchUser() {
         String email = searchField.getText().trim();
-        if (email.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Enter an email to search!", "Warning", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        loadTableData(email);
+        String level = levelFilter.getSelectedItem().toString();
+        loadTableData(email, level);
     }
 
+    /**
+     * Updates the statistics displayed on the UI.
+     */
     private void updateStats() {
         String url = "jdbc:mysql://localhost:3306/quizApp";
         String user = "root";
@@ -163,10 +186,7 @@ public class ViewStats extends JFrame {
                 highestMarkLabel.setText("Highest Mark: " + rs.getInt("highest"));
                 lowestMarkLabel.setText("Lowest Mark: " + rs.getInt("lowest"));
                 meanMarkLabel.setText("Mean Mark: " + rs.getDouble("mean"));
-
-                // Calculate and display total scores
-                int totalScores = rs.getInt("totalScores");
-                totalScoresLabel.setText("Total Scores: " + totalScores);
+                totalScoresLabel.setText("Total Scores: " + rs.getInt("totalScores"));
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error retrieving stats!", "Error", JOptionPane.ERROR_MESSAGE);

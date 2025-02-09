@@ -2,8 +2,6 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,7 +11,7 @@ public class PlayQuiz {
     private JPanel questionPanel;
     private ButtonGroup[] buttonGroups;
     private JRadioButton[][] optionButtons;
-    private int questionIndex = 0;
+    
 
     public PlayQuiz(Compitetor user) {
         this.user = user;
@@ -121,7 +119,7 @@ public class PlayQuiz {
         ));
 
         // Question number and text
-        JLabel questionLabel = new JLabel("<html><b>Question " + (index + 1) + ":</b> " + question.getText() + "</html>");
+        JLabel questionLabel = new JLabel("<html><b>Question " + (index + 1) + ":</b> " + question.getQuestionText() + "</html>");
         questionLabel.setFont(new Font("Arial", Font.BOLD, 16));
         questionLabel.setForeground(Color.WHITE);
         questionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
