@@ -11,7 +11,7 @@ public class AdminFeaturesTest {
 
     @Test
     public void testUpdateQuestion_Success() {
-        int questionId = 1; // Replace with an existing question ID
+        int questionId = 1; // Replace with an existin1g question ID
         String newQuestionText = "What is Java?";
         String newLevel = "Medium";
         String newOption1 = "Option A";

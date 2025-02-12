@@ -6,12 +6,12 @@ package app;
  */
 public class Compitetor {
     private int id;
-    private int scoreCount;
     private String name;
     private String email;
     private String role;
     private String level;
     private int[] scores;
+    private int scoreCount;
 
     /**
      * Constructor for creating a new competitor.
@@ -79,6 +79,7 @@ public class Compitetor {
 
     /**
      * Increments the score count by one.
+     * 
      */
     public void incrementScoreCount() {
         this.scoreCount++;
